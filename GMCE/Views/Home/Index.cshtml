@@ -2,3 +2,138 @@
     ViewBag.Title = "Home Page";
 }
 
+<section class="content" style="margin-top:3%">
+    <div class="container-fluid">
+        <!-- SELECT2 EXAMPLE -->
+        <div class="card card-default">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h3 class="card-title">Admission Form</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Registration Date</label>
+                                <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>STD ID</label>
+                                <input type="number" class="form-control" />
+                            </div>
+                            <!-- /.form-group -->
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label>Student Name</label>
+                                <input type="Text" class="form-control" />
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label>Cource</label>
+                                <input type="Text" class="form-control" />
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label>Student Mo:</label>
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    </div>
+                                    <input type="number" class="form-control">
+                                </div>
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label>Parent's Mo:</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    </div>
+                                    <input type="number" class="form-control">
+                                </div>
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <div class="form-group">
+                                <label>Total Fee:</label>
+                                <input type="number" class="form-control">
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12 col-sm-6" style="margin-top:3.5%">
+                            <div class="form-group">
+                                <label>Fees Payment : </label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                    <label class="form-check-label" for="inlineRadio1">Lumpsum</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                    <label class="form-check-label" for="inlineRadio2">Installment</label>
+                                </div>
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </div>
+
+                <!-- /.row -->
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                <button class="btn btn-primary" style="float:right">Register Student</button>
+            </div>
+        </div>
+        <!-- /.card -->
+    </div>
+</section>
+
+@section scripts{
+
+
+    <script src="~/Scripts/AdmissionForm.js"></script>
+}
+
+

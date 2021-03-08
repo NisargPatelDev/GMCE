@@ -19,14 +19,17 @@
     <link rel="stylesheet" href="~/plugins/jqvmap/jqvmap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
-    <!-- overlayScrollbars -->  
+    <!-- overlayScrollbars -->
     <link rel="stylesheet" href="~/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Daterange picker -->
     <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="~/plugins/summernote/summernote-bs4.min.css">
 
-   
+    <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+
     @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -167,8 +170,8 @@
 
             <!-- Sidebar -->
             <div class="sidebar">
-                
-             
+
+
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -179,16 +182,15 @@
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
                                     Admission Form
-                                   
+
                                 </p>
-                            </a>                            
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a href="pages/widgets.html" class="nav-link">
                                 <i class="nav-icon fas fa-th"></i>
                                 <p>
                                     Recipet
-                                    <span class="right badge badge-danger">New</span>
                                 </p>
                             </a>
                         </li>
@@ -196,9 +198,9 @@
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
                                 <p>
-                                   Reports
+                                    Reports
                                     <i class="fas fa-angle-left right"></i>
-                                    <span class="badge badge-info right">6</span>
+                                    <span class="badge badge-info right">4</span>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -226,52 +228,54 @@
                                         <p>Student Fess Report</p>
                                     </a>
                                 </li>
-                               
+
                             </ul>
                         </li>
-                     </ul>
-                <!-- /.sidebar-menu -->
+                    </ul>
+                    <!-- /.sidebar-menu -->
             </div>
             <!-- /.sidebar -->
         </aside>
-        @RenderBody()
-        @*@Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")*@
-        @RenderSection("scripts", required: false)
+        <div class="content-wrapper">
+            @RenderBody()
+        </div>
+            @*@Scripts.Render("~/bundles/jquery")
+            @Scripts.Render("~/bundles/bootstrap")*@
+            @RenderSection("scripts", required: false)
 
-        <!-- jQuery -->
-        <script src="~/plugins/jquery/jquery.min.js"></script>
-        <!-- jQuery UI 1.11.4 -->
-        <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
-        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-        <script>
-            $.widget.bridge('uibutton', $.ui.button)
-        </script>
-        <!-- Bootstrap 4 -->
-        <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script><!-- ChartJS -->
-        <script src="~/plugins/chart.js/Chart.min.js"></script>
-        <!-- Sparkline -->
-        <script src="~/plugins/sparklines/sparkline.js"></script>
-        <!-- JQVMap -->
-        <script src="~/plugins/jqvmap/jquery.vmap.min.js"></script>
-        <script src="~/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-        <!-- jQuery Knob Chart -->
-        <script src="~/plugins/jquery-knob/jquery.knob.min.js"></script>
-        <!-- daterangepicker -->
-        <script src="~/plugins/moment/moment.min.js"></script>
-        <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
-        <!-- Tempusdominus Bootstrap 4 -->
-        <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-        <!-- Summernote -->
-        <script src="~/plugins/summernote/summernote-bs4.min.js"></script>
-        <!-- overlayScrollbars -->
-        <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-        <!-- AdminLTE App -->
-        <script src="~/dist/js/adminlte.js"></script>
-        <!-- AdminLTE for demo purposes -->
-        <script src="~/dist/js/demo.js"></script>
-        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-        <script src="~/dist/js/pages/dashboard.js"></script>
-    </div>
+            <!-- jQuery -->
+            <script src="~/plugins/jquery/jquery.min.js"></script>
+            <!-- jQuery UI 1.11.4 -->
+            <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
+            <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+            <script>
+                $.widget.bridge('uibutton', $.ui.button)
+            </script>
+            <!-- Bootstrap 4 -->
+            <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script><!-- ChartJS -->
+            <script src="~/plugins/chart.js/Chart.min.js"></script>
+            <!-- Sparkline -->
+            <script src="~/plugins/sparklines/sparkline.js"></script>
+            <!-- JQVMap -->
+            <script src="~/plugins/jqvmap/jquery.vmap.min.js"></script>
+            <script src="~/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+            <!-- jQuery Knob Chart -->
+            <script src="~/plugins/jquery-knob/jquery.knob.min.js"></script>
+            <!-- daterangepicker -->
+            <script src="~/plugins/moment/moment.min.js"></script>
+            <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+            <!-- Tempusdominus Bootstrap 4 -->
+            <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+            <!-- Summernote -->
+            <script src="~/plugins/summernote/summernote-bs4.min.js"></script>
+            <!-- overlayScrollbars -->
+            <script src="~/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+            <!-- AdminLTE App -->
+            <script src="~/dist/js/adminlte.js"></script>
+            <!-- AdminLTE for demo purposes -->
+            <script src="~/dist/js/demo.js"></script>
+            <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+            <script src="~/dist/js/pages/dashboard.js"></script>
+        </div>
 </body>
 </html>
