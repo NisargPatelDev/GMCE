@@ -1,0 +1,81 @@
+﻿<div class="card">
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="form-group">
+            <label>Date range:</label>
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                </div>
+                <input type="text" class="form-control float-right" id="DateRange">
+                <span><button class="btn btn-primary" id="ClearDateRange">Clear</button></span>
+            </div>
+            <!-- /.input group -->
+        </div>
+
+        <!-- /.form group -->
+    </div>
+
+    <table id="example1" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>STD ID</th>
+                <th>Student Name</th>
+                <th>Course</th>
+                <th>Total Fees</th>
+                <th>Student Mobile</th>
+                <th>Register Date</th>
+                <th>Start Date</th>
+                <th>Gender</th>
+                <th>Move</th>
+            </tr>
+        </thead>
+        <tbody id="StudentListBody">
+        </tbody>
+    </table>
+</div>
+
+<div class="modal" id="modal-default" style="margin-top:11%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Move Student</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="MoveStd">
+                    @*<div class="col-6">
+                        <button type="button" id="Passout" class="btn btn-block btn-warning btn-lg">PASSOUT</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" id="Dropout" class="btn btn-block btn-danger btn-lg">DROPOUT</button>
+                    </div>*@
+
+                </div>
+
+            </div>           
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="margin-left:82%">Cancel</button>               
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+
+
+
+@*<-------------------------------Modal-------------------------------->*@
+
+
+@section scripts{
+
+    <script src="~/Scripts/StudentList.js"></script>
+}

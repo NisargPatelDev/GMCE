@@ -10,15 +10,19 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Registration_date" Type="varchar" MaxLength="50" />
-          <Property Name="Start_date" Type="varbinary" MaxLength="50" />
-          <Property Name="STD_ID" Type="int" />
+          <Property Name="Registration_date" Type="date" />
+          <Property Name="Start_date" Type="varchar" MaxLength="50" />
+          <Property Name="STD_ID" Type="varchar" MaxLength="50" />
           <Property Name="Student_name" Type="varchar" MaxLength="70" />
           <Property Name="Cource" Type="varchar" MaxLength="100" />
-          <Property Name="Student_mobile" Type="int" />
-          <Property Name="Parents_mobile" Type="int" />
+          <Property Name="Student_mobile" Type="varchar" MaxLength="50" />
+          <Property Name="Parents_mobile" Type="varchar" MaxLength="50" />
           <Property Name="Total_fees" Type="varchar" MaxLength="50" />
           <Property Name="Fees_Payment" Type="varchar" MaxLength="50" />
+          <Property Name="Status" Type="varchar" MaxLength="50" />
+          <Property Name="DOB" Type="varchar" MaxLength="50" />
+          <Property Name="Age" Type="int" />
+          <Property Name="Gender" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityContainer Name="GMCEModelStoreContainer">
           <EntitySet Name="Student_Matser" EntityType="Self.Student_Matser" Schema="dbo" store:Type="Tables" />
@@ -35,15 +39,19 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Registration_date" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Start_date" Type="Binary" MaxLength="50" FixedLength="false" />
-          <Property Name="STD_ID" Type="Int32" />
+          <Property Name="Registration_date" Type="DateTime" Precision="0" />
+          <Property Name="Start_date" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="STD_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Student_name" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
           <Property Name="Cource" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Student_mobile" Type="Int32" />
-          <Property Name="Parents_mobile" Type="Int32" />
+          <Property Name="Student_mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Parents_mobile" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Total_fees" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Fees_Payment" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DOB" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Age" Type="Int32" />
+          <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -54,6 +62,10 @@
           <EntitySetMapping Name="Student_Matser">
             <EntityTypeMapping TypeName="GMCEModel.Student_Matser">
               <MappingFragment StoreEntitySet="Student_Matser">
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Age" ColumnName="Age" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Fees_Payment" ColumnName="Fees_Payment" />
                 <ScalarProperty Name="Total_fees" ColumnName="Total_fees" />
                 <ScalarProperty Name="Parents_mobile" ColumnName="Parents_mobile" />

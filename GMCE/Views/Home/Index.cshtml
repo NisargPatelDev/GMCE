@@ -8,7 +8,7 @@
         <div class="card card-default">
             <div class="card card-default">
                 <div class="card-header">
-                    <h3 class="card-title">Admission Form</h3>
+                    <h3 class="card-title" style="margin-left:41%;color:Highlight;font-weight:600;font-size:x-large">Admission Form</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
@@ -21,21 +21,21 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Registration Date</label>
-                                <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                <input type="date" class="form-control" id="RegistrationDate" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Start Date</label>
-                                <input type="date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                                <input type="date" class="form-control" id="StartDate" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
                             </div>
                         </div>
                         <!-- /.col -->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>STD ID</label>
-                                <input type="number" class="form-control" />
+                                <input type="text" id="STDID" class="form-control" style="text-transform:uppercase" disabled />
                             </div>
                             <!-- /.form-group -->
                             <!-- /.form-group -->
@@ -47,15 +47,15 @@
                         <div class="col-12 col-sm-6">
                             <div class="form-group">
                                 <label>Student Name</label>
-                                <input type="Text" class="form-control" />
+                                <input type="Text" id="StudentName" class="form-control" style="text-transform:uppercase"/>
                             </div>
                             <!-- /.form-group -->
                         </div>
                         <!-- /.col -->
                         <div class="col-12 col-sm-6">
                             <div class="form-group">
-                                <label>Cource</label>
-                                <input type="Text" class="form-control" />
+                                <label>Course</label>
+                                <input type="Text" id="Cource" class="form-control" style="text-transform:uppercase"/>
                             </div>
                             <!-- /.form-group -->
                         </div>
@@ -66,12 +66,13 @@
                         <div class="col-12 col-sm-6">
                             <div class="form-group">
                                 <label>Student Mo:</label>
-
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                     </div>
-                                    <input type="number" class="form-control">
+                                    @*<input type="number" id="StudentMO" class="form-control" maxlength="10">*@
+                                    @*<input type="text" id="StudentMO" class="form-control" name="phone" maxlength="10">*@
+                                    <input type="number" id="StudentMO" class="form-control" onKeyDown="if(this.value.length==10 && event.keyCode!=8) return false;">
                                 </div>
                             </div>
                             <!-- /.form-group -->
@@ -84,7 +85,10 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                     </div>
-                                    <input type="number" class="form-control">
+                                    @*<input type="number" id="ParentsMo" class="form-control">*@
+                                    @*<input type="text" id="ParentsMo" class="form-control" name="phone" maxlength="10">*@
+                                    <input type="number" id="ParentsMo" class="form-control" onKeyDown="if(this.value.length==10 && event.keyCode!=8) return false;">
+
                                 </div>
                             </div>
                             <!-- /.form-group -->
@@ -96,25 +100,57 @@
                         <div class="col-12 col-sm-6">
                             <div class="form-group">
                                 <label>Total Fee:</label>
-                                <input type="number" class="form-control">
+                                <input type="number" id="TotalFee" class="form-control">
                             </div>
                             <!-- /.form-group -->
-                        </div>
-                        <!-- /.col -->
+                        </div>                       
                         <div class="col-12 col-sm-6" style="margin-top:3.5%">
                             <div class="form-group">
                                 <label>Fees Payment : </label>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                    <label class="form-check-label" for="inlineRadio1">Lumpsum</label>
+                                    <input class="form-check-input" type="radio" name="FeesType" value="LUMPSUM" checked="checked">
+                                    <label class="form-check-label" for="inlineRadio1">LUMPSUM</label>
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                    <label class="form-check-label" for="inlineRadio2">Installment</label>
+                                    <input class="form-check-input" type="radio" name="FeesType" value="INSTALLMENT">
+                                    <label class="form-check-label" for="inlineRadio2">INSTALLMENT</label>
+                                </div>
+                            </div>
+                            <!-- /.form-group -->
+
+                        </div>
+                        <!-- /.col -->
+                        <!-- /.col -->
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-sm-5">
+                            <div class="form-group">
+                                <label>D.O.B</label>
+                                <input type="date" style="text-transform:uppercase" class="form-control" id="DOB" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-4">
+                            <div class="form-group">
+                                <label>Age:</label>
+                                <input type="number" id="Age" class="form-control" style="text-transform:uppercase"  disabled>
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+                        <div class="col-12 col-sm-3" style="margin-top:3.5%">
+                            <div class="form-group">    
+                                <label>Gender : </label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Gender" value="Male" checked="checked">
+                                    <label class="form-check-label" for="inlineRadio1">MALE</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Gender" value="FEMALE">
+                                    <label class="form-check-label" for="inlineRadio2">FEMALE</label>
                                 </div>
                             </div>
                             <!-- /.form-group -->
                         </div>
+                        <!-- /.col -->
                         <!-- /.col -->
                     </div>
                 </div>
@@ -123,15 +159,15 @@
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
-                <button class="btn btn-primary" style="float:right">Register Student</button>
+                <button class="btn btn-primary" style="float:right" id="bntRegister">Register Student</button>
             </div>
         </div>
         <!-- /.card -->
     </div>
 </section>
 
-@section scripts{
 
+@section scripts{
 
     <script src="~/Scripts/AdmissionForm.js"></script>
 }
