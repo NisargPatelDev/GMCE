@@ -6,6 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="c7b9a486432b4c02b988fb1a4bda41b7" Name="Diagram1">
         <EntityTypeShape EntityType="GMCEModel.Student_Matser" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="GMCEModel.Receipt_Master" Width="1.5" PointX="3.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

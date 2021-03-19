@@ -5,6 +5,18 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="GMCEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Receipt_Master">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="STDID" Type="varchar" MaxLength="50" />
+          <Property Name="Date" Type="varchar" MaxLength="50" />
+          <Property Name="Receipt_No" Type="int" />
+          <Property Name="PaidFess" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="FessInWords" Type="varchar" MaxLength="50" />
+          <Property Name="Payment_type" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Student_Matser">
           <Key>
             <PropertyRef Name="ID" />
@@ -23,8 +35,11 @@
           <Property Name="DOB" Type="varchar" MaxLength="50" />
           <Property Name="Age" Type="int" />
           <Property Name="Gender" Type="varchar" MaxLength="50" />
+          <Property Name="Due_fees" Type="varchar" MaxLength="50" />
         </EntityType>
+        <Function Name="GetAllReceipt" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="GMCEModelStoreContainer">
+          <EntitySet Name="Receipt_Master" EntityType="Self.Receipt_Master" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Student_Matser" EntityType="Self.Student_Matser" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -33,6 +48,8 @@
       <Schema Namespace="GMCEModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="GMCEEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Student_Matser" EntityType="GMCEModel.Student_Matser" />
+          <EntitySet Name="Receipt_Master" EntityType="GMCEModel.Receipt_Master" />
+          <FunctionImport Name="GetAllReceipt" ReturnType="Collection(GMCEModel.GetAllReceipt_Result)" />
         </EntityContainer>
         <EntityType Name="Student_Matser">
           <Key>
@@ -52,7 +69,30 @@
           <Property Name="DOB" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Age" Type="Int32" />
           <Property Name="Gender" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Due_fees" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="Receipt_Master">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="STDID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Receipt_No" Type="Int32" />
+          <Property Name="PaidFess" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="FessInWords" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Payment_type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <ComplexType Name="GetAllReceipt_Result">
+          <Property Type="String" Name="STD_ID" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="Receipt_No" Nullable="true" />
+          <Property Type="String" Name="Date" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Student_name" Nullable="true" MaxLength="70" />
+          <Property Type="String" Name="Cource" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="PaidFess" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="String" Name="Due_fees" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Payment_type" Nullable="true" MaxLength="50" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -62,6 +102,7 @@
           <EntitySetMapping Name="Student_Matser">
             <EntityTypeMapping TypeName="GMCEModel.Student_Matser">
               <MappingFragment StoreEntitySet="Student_Matser">
+                <ScalarProperty Name="Due_fees" ColumnName="Due_fees" />
                 <ScalarProperty Name="Gender" ColumnName="Gender" />
                 <ScalarProperty Name="Age" ColumnName="Age" />
                 <ScalarProperty Name="DOB" ColumnName="DOB" />
@@ -79,6 +120,33 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Receipt_Master">
+            <EntityTypeMapping TypeName="GMCEModel.Receipt_Master">
+              <MappingFragment StoreEntitySet="Receipt_Master">
+                <ScalarProperty Name="Payment_type" ColumnName="Payment_type" />
+                <ScalarProperty Name="FessInWords" ColumnName="FessInWords" />
+                <ScalarProperty Name="PaidFess" ColumnName="PaidFess" />
+                <ScalarProperty Name="Receipt_No" ColumnName="Receipt_No" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="STDID" ColumnName="STDID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetAllReceipt" FunctionName="GMCEModel.Store.GetAllReceipt">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GMCEModel.GetAllReceipt_Result">
+                <ScalarProperty Name="STD_ID" ColumnName="STD_ID" />
+                <ScalarProperty Name="Receipt_No" ColumnName="Receipt_No" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Student_name" ColumnName="Student_name" />
+                <ScalarProperty Name="Cource" ColumnName="Cource" />
+                <ScalarProperty Name="PaidFess" ColumnName="PaidFess" />
+                <ScalarProperty Name="Due_fees" ColumnName="Due_fees" />
+                <ScalarProperty Name="Payment_type" ColumnName="Payment_type" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

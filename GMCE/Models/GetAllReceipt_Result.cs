@@ -10,24 +10,16 @@
 namespace GMCE.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Student_Matser
+    public partial class GetAllReceipt_Result
     {
-        public int ID { get; set; }
-        public Nullable<System.DateTime> Registration_date { get; set; }
-        public string Start_date { get; set; }
         public string STD_ID { get; set; }
+        public Nullable<int> Receipt_No { get; set; }
+        public string Date { get; set; }
         public string Student_name { get; set; }
         public string Cource { get; set; }
-        public string Student_mobile { get; set; }
-        public string Parents_mobile { get; set; }
-        public string Total_fees { get; set; }
-        public string Fees_Payment { get; set; }
-        public string Status { get; set; }
-        public string DOB { get; set; }
-        public Nullable<int> Age { get; set; }
-        public string Gender { get; set; }
+        public Nullable<decimal> PaidFess { get; set; }
         public string Due_fees { get; set; }
+        public string Payment_type { get; set; }
     }
 }

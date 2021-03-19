@@ -1,41 +1,78 @@
 ﻿<div class="card">
     <!-- /.card-header -->
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-filter"></i></h3>
+        <div class="card-tools">          
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+
+        </div>
+    </div>
     <div class="card-body">
         <div class="form-group">
-            <label>Date range:</label>
+            <div class="row">
+                <div class="col-6">
+                    <label>Date range:</label>
 
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="far fa-calendar-alt"></i>
-                    </span>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control float-right" id="DateRange">
+                        <span><button class="btn btn-primary" id="ClearDateRange">Clear</button></span>
+                    </div>
                 </div>
-                <input type="text" class="form-control float-right" id="DateRange">
-                <span><button class="btn btn-primary" id="ClearDateRange">Clear</button></span>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label>Select</label>
+                        <select class="form-control" id="SelectStdType">
+                            <option>RUNNING</option>
+                            <option>PASSOUT</option>
+                            <option>DROPOUT</option>                            
+                        </select>
+                    </div>
+                </div>
             </div>
+           
             <!-- /.input group -->
         </div>
 
         <!-- /.form group -->
     </div>
 
-    <table id="example1" class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>STD ID</th>
-                <th>Student Name</th>
-                <th>Course</th>
-                <th>Total Fees</th>
-                <th>Student Mobile</th>
-                <th>Register Date</th>
-                <th>Start Date</th>
-                <th>Gender</th>
-                <th>Move</th>
-            </tr>
-        </thead>
-        <tbody id="StudentListBody">
-        </tbody>
-    </table>
+
+</div>
+
+
+<div class="card">
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>STD ID</th>
+                    <th>Student Name</th>
+                    <th>Course</th>
+                    <th>Total-Fees</th>
+                    <th>Total-Due</th>
+                    <th>Student MO</th>
+                    <th>Register Date</th>
+                    <th>Start Date</th>                   
+                    <th>Move</th>
+                    <th>Action</th>                   
+
+                </tr>
+            </thead>
+            <tbody id="StudentListBody">
+            </tbody>
+        </table>
+        <!-- /.form group -->
+    </div>
+
+   
 </div>
 
 <div class="modal" id="modal-default" style="margin-top:11%">
@@ -69,6 +106,162 @@
 </div>
 
 
+<div class="modal bd-example-modal-lg" tabindex="-1" id="EditModal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="overflow:hidden">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Student Data</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Registration Date</label>
+                            <input type="hidden" id="HidId" />
+                            <input type="date" class="form-control" id="RegistrationDate" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" class="form-control" id="StartDate" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>STD ID</label>
+                            <input type="text" id="STDID" class="form-control" style="text-transform:uppercase" disabled />
+                        </div>
+                        <!-- /.form-group -->
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Student Name</label>
+                            <input type="Text" id="StudentName" class="form-control" style="text-transform:uppercase" />
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Course</label>
+                            <input type="Text" id="Cource" class="form-control" style="text-transform:uppercase" />
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Student Mo:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                </div>
+                                @*<input type="number" id="StudentMO" class="form-control" maxlength="10">*@
+                                @*<input type="text" id="StudentMO" class="form-control" name="phone" maxlength="10">*@
+                                <input type="number" id="StudentMO" class="form-control" onKeyDown="if(this.value.length==10 && event.keyCode!=8) return false;">
+                            </div>
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Parent's Mo:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                </div>
+                                @*<input type="number" id="ParentsMo" class="form-control">*@
+                                @*<input type="text" id="ParentsMo" class="form-control" name="phone" maxlength="10">*@
+                                <input type="number" id="ParentsMo" class="form-control" onKeyDown="if(this.value.length==10 && event.keyCode!=8) return false;">
+
+                            </div>
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Total Fee:</label>
+                            <input type="number" id="TotalFee" class="form-control">
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <div class="col-12 col-sm-6" style="margin-top:4.5%">
+                        <div class="form-group">
+                            <label>Fees Payment : </label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="FeesType" value="LUMPSUM" checked="checked">
+                                <label class="form-check-label" for="inlineRadio1">LUMPSUM</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="FeesType" value="INSTALLMENT">
+                                <label class="form-check-label" for="inlineRadio2">INSTALLMENT</label>
+                            </div>
+                        </div>
+                        <!-- /.form-group -->
+
+                    </div>
+                    <!-- /.col -->
+                    <!-- /.col -->
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-5">
+                        <div class="form-group">
+                            <label>D.O.B</label>
+                            <input type="date" style="text-transform:uppercase" class="form-control" id="DOB" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        <div class="form-group">
+                            <label>Age:</label>
+                            <input type="number" id="Age" class="form-control" style="text-transform:uppercase" disabled>
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <div class="col-12 col-sm-4" style="margin-top:4.5%">
+                        <div class="form-group">
+                            <label>Gender : </label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Gender" value="Male" checked="checked">
+                                <label class="form-check-label" for="inlineRadio1">MALE</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Gender" value="FEMALE">
+                                <label class="form-check-label" for="inlineRadio2">FEMALE</label>
+                            </div>
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                    <!-- /.col -->
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="margin-left:81%">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnEditStudent">Save</button>
+            </div>
+        </div>
+            
+        </div>
+    </div>
 
 
 

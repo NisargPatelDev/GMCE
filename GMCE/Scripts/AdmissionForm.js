@@ -27,8 +27,9 @@ function ResgisterStudent() {
         Student_mobile: parseInt($('#StudentMO').val()),
         Parents_mobile: parseInt($('#ParentsMo').val()),
         Total_fees: $('#TotalFee').val(),
+        Due_fees: $('#TotalFee').val(),
         Fees_Payment: $('input[name="FeesType"]:checked').val(),
-        Status: "Current",
+        Status: "RUNNING",
         DOB: $('#DOB').val(),
         Age: $('#Age').val(),
         Gender: $('input[name="Gender"]:checked').val()

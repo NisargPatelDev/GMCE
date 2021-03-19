@@ -1,30 +1,31 @@
 ﻿
 
+
 function GetDatatable() {
-    
+
     $("#example1").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');           
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
 }
 
 var count = 0;
 $(document).ready(function () {
     debugger
-    $('#DateRange').daterangepicker();    
+    $('#DateRange').daterangepicker();
     $('#DateRange').val("");
     count++;
     if (count != 0) {
         GetStudentList();
-    }   
+    }
     $('#StudentList').removeClass("active");
     $('#AdmissionForm').removeClass("active");
     $('#recipet').removeClass("active");
     $('#Reports').removeClass("active");
     $('#StudentList').addClass("active");
-    
-})
 
+})
+var DataCount = 0;
 function GetStudentList() {
     debugger
     var StartDate = "";
@@ -33,12 +34,12 @@ function GetStudentList() {
     if ($('#DateRange').val() != "") {
         isfiltered = 1;
         var date = $('#DateRange').val().split("-");
-        split = date[0].split('/');        
-        split2 = date[1].split('/');        
+        split = date[0].split('/');
+        split2 = date[1].split('/');
         StartDate = [split[1], split[0], split[2]].join('/');
-        EndDate = [split2[1], split2[0], split2[2]].join('/');    
-    }    
-    $.get('/Home/GetStudentList?minDate=' + StartDate +"&maxDate="+EndDate, function (res) {
+        EndDate = [split2[1], split2[0], split2[2]].join('/');
+    }
+    $.get('/Home/GetStudentList?minDate=' + StartDate + "&maxDate=" + EndDate + "&stdType=" + $('#SelectStdType').val(), function (res) {
         debugger
         var data = res;
         var htmlString = "";
@@ -46,34 +47,36 @@ function GetStudentList() {
             var RegisterDate = new Date(parseInt(data[i]["Registration_date"].substr(6)));
             RegisterDate = RegisterDate.toLocaleDateString();
             split = RegisterDate.split('/');
-            RegisterDate = [split[1], split[0], split[2]].join('/'); 
+            RegisterDate = [split[1], split[0], split[2]].join('/');
             split = data[i]["Start_date"].split('-');
-            StartDate = [split[2], split[1], split[0]].join('/');                         
-            htmlString +=` <tr>
+            StartDate = [split[2], split[1], split[0]].join('/');
+            htmlString += ` <tr>
                     <td>${data[i]["STD_ID"].toUpperCase()}</td>
                     <td>${data[i]["Student_name"].toUpperCase()}</td>
                     <td>${data[i]["Cource"].toUpperCase()}</td>
                     <td>${data[i]["Total_fees"]}</td>
+                    <td>${data[i]["Due_fees"]}</td>       
                     <td>${data[i]["Student_mobile"]}</td>
                     <td>${RegisterDate}</td>                    
-                    <td>${StartDate}</td>                    
-                    <td>${data[i]["Gender"]}</td>                    
+                    <td>${StartDate}</td>                                                          
                     <td style="width:1%" onclick="MoveStudent(${data[i]["ID"]})"><center><i class="fas fa-box-open"></i></center></td>                    
-          </tr>`            
+                    <td style="width:1%" onclick="GetStudentById(${data[i]["ID"]})"><center><i class="fas fa-edit"></i></center></td>                    
+          </tr>`
         }
         $('#StudentListBody').html(htmlString);
-        if (isfiltered != 1) {
+
+        if (DataCount == 0) {
             GetDatatable();
         }
-           
-        
-       
+        DataCount++;
+
+
     })
 }
 
 //function getStudentListWithFilter() {
 //    debugger
-   
+
 //    $.get('/Home/GetStudentWithFilter?minDate=' + StartDate +'&maxDate='+EndDate, function (res) {
 //        debugger
 //        var data = res;
@@ -98,23 +101,26 @@ $(document).on('click', '#ClearDateRange', function () {
     $('#DateRange').val("");
     if (count != 0) {
         GetStudentList();
-    }   
+    }
 })
 
 
 $(document).on('change', '#DateRange', function () {
     if (count != 0) {
-        GetStudentList();    
+        GetStudentList();
     }
-   
+
 })
 
 function MoveStudent(id) {
-    var htmlString = ` <div class="col-6">
+    var htmlString = ` <div class="col-4">
                         <button type="button" id="Passout" onclick="Passout(${id})" class="btn btn-block btn-warning btn-lg">PASSOUT</button>
                     </div>
-                    <div class="col-6">
+                    <div class="col-4">
                         <button type="button" id="Dropout" onclick="Dropout(${id})" class="btn btn-block btn-danger btn-lg">DROPOUT</button>
+                    </div>
+                     <div class="col-4">
+                        <button type="button" id="Dropout" onclick="Running(${id})" class="btn btn-block btn-danger btn-lg">Running</button>
                     </div>`
     $('#MoveStd').html(htmlString);
     $('#modal-default').modal({
@@ -124,7 +130,8 @@ function MoveStudent(id) {
 
 }
 
-function Passout(id) {    
+function Passout(id) {
+    $("#modal-default").modal('hide');
     swal({
         title: "Are you sure?",
         text: "You Want To Move This Student To Passout",
@@ -134,11 +141,224 @@ function Passout(id) {
     })
         .then((willDelete) => {
             if (willDelete) {
-                swal("Student Moved To Passout", {
-                    icon: "success",
+                $.ajax({
+                    url: "/Home/MoveStudent?id=" + id + "&moveTo=PASSOUT",
+                    type: "POST",
+                    dataType: "json",
+                    success: function () {
+                        swal("Student Moved To Passout", {
+                            icon: "success",
+                        });
+                        GetStudentList();
+                    }
                 });
+
             } else {
-                swal("Your imaginary file is safe!");
+                swal("Moving Process Canceld");
             }
         });
 }
+
+function Dropout(id) {
+    $("#modal-default").modal('hide');
+    swal({
+        title: "Are you sure?",
+        text: "You Want To Move This Student To Dropout",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "/Home/MoveStudent?id=" + id + "&moveTo=DROPOUT",
+                    type: "POST",
+                    dataType: "json",
+                    success: function () {
+                        swal("Student Moved To Dropout", {
+                            icon: "success",
+                        });
+                        GetStudentList();
+                    }
+                });
+
+            } else {
+                swal("Moving Process Canceld");
+            }
+        });
+}
+
+function Running(id) {
+    $("#modal-default").modal('hide');
+    swal({
+        title: "Are you sure?",
+        text: "You Want To Move This Student To Running",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "/Home/MoveStudent?id=" + id + "&moveTo=RUNNING",
+                    type: "POST",
+                    dataType: "json",
+                    success: function () {
+                        swal("Student Moved To Running", {
+                            icon: "success",
+                        });
+                        GetStudentList();
+                    }
+                });
+
+            } else {
+                swal("Moving Process Canceld");
+            }
+        });
+}
+var STDID = "";
+function GetStudentById(id) {
+    $.get('/Home/GetStudentById?id=' + id, function (res) {
+        debugger
+        var RegisterDate = new Date(parseInt(res.Registration_date.substr(6)));
+        RegisterDate = RegisterDate.toLocaleDateString();
+        split = RegisterDate.split('/');
+        if (split[0].length == 1) {
+            RegisterDate = [split[2], "0" + split[0], split[1]].join('-');
+        }
+        if (split[1].length == 1) {
+            RegisterDate = [split[2], split[0], "0" +split[1]].join('-');
+        }
+        if (split[0].length == 1 && split[1].length == 1) {
+            RegisterDate = [split[2], "0" +split[0], "0" + split[1]].join('-');
+        }
+       
+        $('#RegistrationDate').val(RegisterDate.toString());
+        $('#StartDate').val(res.Start_date);
+        $('#STDID').val(res.STD_ID);
+        $('#StudentName').val(res.Student_name);    
+        $('#Cource').val(res.Cource);
+        $('#StudentMO').val(res.Student_mobile);
+        $('#ParentsMo').val(res.Parents_mobile);
+        $('#TotalFee').val(res.Total_fees);       
+        $("input[name=FeesType][value=" + res.Fees_Payment + "]").attr('checked', 'checked');
+        $("input[name=Gender][value=" + res.Gender + "]").attr('checked', 'checked');
+        $('#DOB').val(res.DOB);
+        $('#Age').val(res.Age);
+        $('#HidId').val(res.ID);
+        $("#STDID").prop('disabled', false);
+        STDID = res.STD_ID;
+    })
+    $('#EditModal').modal('show');
+}
+
+$(document).on('change', '#SelectStdType', function () {
+    isfiltered = 1;
+    GetStudentList();
+})
+
+$(document).on('click', '#btnEditStudent', function () {
+    ValidateRegistration();
+})
+
+function ValidateRegistration() {
+    var flag = 0;
+    if ($('#RegistrationDate').val() == "") {
+        alert("PLease Enter Registration Date");
+    }
+    else if ($('#StartDate').val() == "") {
+        alert("PLease Enter Start Date");
+    }
+    else if ($('#STDID').val() == "") {
+        alert("PLease Enter STD ID");
+    }
+    else if ($('#StudentName').val() == "") {
+        alert("PLease Enter Student Name");
+    }
+    else if ($('#Cource').val() == "") {
+        alert("PLease Enter Course");
+    }
+    else if ($('#TotalFee').val() == "") {
+        alert("PLease Enter Total Fee");
+    }
+    else if ($('#DOB').val() == "") {
+        alert("PLease Enter D.O.B");
+    }   
+    else if ($('#StudentMO').val() != "") {
+        if ($('#StudentMO').val().length != 10) {
+            alert("Please Enter 10 Digit Number in Student Mo")
+        }
+        else {
+            flag = 1;
+        }
+
+    }
+    else if ($('#ParentsMo').val() != "") {
+        if ($('#ParentsMo').val().length != 10) {
+            alert("Please Enter 10 Digit Number in Parents Mo")
+        }
+        else {
+            flag = 1;
+        }
+    }
+    if (flag == 1) {
+        if (STDID != $('#STDID').val()) {
+            $.get('/home/IsStudentIdAlreadyExsist?id=' + $('#STDID').val(), function (res) {
+                if (res == 1) {
+                    ResgisterStudent();
+                }
+                else {
+                    alert("STD Alerday Exist!!");
+                }
+            })
+        }
+        else {
+            ResgisterStudent();
+        }
+       
+       
+    }
+}
+
+function ResgisterStudent() {
+    var stdObj = {
+        Registration_date: $('#RegistrationDate').val(),
+        Start_date: $('#StartDate').val(),
+        STD_ID: $('#STDID').val(),
+        Student_name: $('#StudentName').val(),
+        Cource: $('#Cource').val(),
+        Student_mobile: parseInt($('#StudentMO').val()),
+        Parents_mobile: parseInt($('#ParentsMo').val()),
+        Total_fees: $('#TotalFee').val(),
+        Fees_Payment: $('input[name="FeesType"]:checked').val(),
+        Status: "RUNNING",
+        DOB: $('#DOB').val(),
+        Age: $('#Age').val(),
+        Gender: $('input[name="Gender"]:checked').val()
+    };
+
+    $.ajax({
+        url: "/Home/EditStudent?id=" + $('#HidId').val(),
+        data: stdObj,
+        type: "POST",
+        dataType: "json",
+        success: function () {
+            $('#EditModal').modal('hide');
+                alert("STD ID : " + $('#STDID').val() + " Name : " + $('#StudentName').val() + " is Edited");
+                
+            GetStudentList();
+        }
+       
+    });
+}
+$(document).on('change', '#DOB', function () {
+    var birthday = new Date($('#DOB').val());
+    var ageDifMs = Date.now() - birthday.getTime();
+    var ageDate = new Date(ageDifMs); // miliseconds from epoch
+    var Age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    $('#Age').val(Age);
+})
+
+
+
+
