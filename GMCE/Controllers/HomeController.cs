@@ -167,7 +167,7 @@ namespace GMCE.Controllers
         public JsonResult GetAllReceipt()
         {
             var Data = _context.GetAllReceipt().ToList();
-            return Json(Data, JsonRequestBehavior.AllowGet);
+            return Json(new { data = Data}, JsonRequestBehavior.AllowGet);
         }
 
     }

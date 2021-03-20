@@ -5,7 +5,8 @@
     $('#Reports').removeClass("active");
     $('#receipt').addClass("active");
     $('#CreateReportPlus').click();
-    GetAllReceipt();
+    GetAllReceipts();
+
 })
 var TotalFees = "";
 $(document).on('focusout', '#STDID', function () {
@@ -25,7 +26,7 @@ $(document).on('focusout', '#STDID', function () {
         $('#StudentName').val("");
         $('#Cource').val("");
     }
-  
+
 })
 
 $(document).on('keyup', '#TotalFee', function () {
@@ -34,10 +35,10 @@ $(document).on('keyup', '#TotalFee', function () {
         $('#DueFee').val(TotalFees);
     }
     else {
-        var DueFee = parseInt(TotalFees) - PayingFess; 
+        var DueFee = parseInt(TotalFees) - PayingFess;
         $('#DueFee').val(DueFee);
     }
-   
+
 })
 
 var a = ['', 'one ', 'two ', 'three ', 'four ', 'five ', 'six ', 'seven ', 'eight ', 'nine ', 'ten ', 'eleven ', 'twelve ', 'thirteen ', 'fourteen ', 'fifteen ', 'sixteen ', 'seventeen ', 'eighteen ', 'nineteen '];
@@ -73,7 +74,7 @@ function CreateReceipt() {
         Receipt_No: $('#ReceiptNo').val(),
         PaidFess: $('#TotalFee').val(),
         FessInWords: $('#FeesInWords').val(),
-        Payment_type: $('input[name="FeesType"]:checked').val()      
+        Payment_type: $('input[name="FeesType"]:checked').val()
     };
 
     $.ajax({
@@ -85,10 +86,11 @@ function CreateReceipt() {
             if (result != "0") {
                 alert("Receipt Created");
                 ClearReceiptForm()
+                GetAllReceipts();
             }
-            else {                
+            else {
                 alert("Receipt No Already Exsits")
-                     $('#ReceiptNo').val("");
+                $('#ReceiptNo').val("");
             }
 
         },
@@ -119,7 +121,7 @@ function ValidateReceipt() {
     else {
         CreateReceipt();
     }
-}   
+}
 
 $(document).on('click', '#bntCreateReceipt', function () {
 
@@ -137,33 +139,78 @@ function ClearReceiptForm() {
     $('#FeesInWord').val("");
 }
 
-
-function GetAllReceipt() {   
-    $("#example1").DataTable({
-        "responsive": true, "lengthChange": false, "autoWidth": false,
-        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-  
-    $.get('/Home/GetAllReceipt', function (res) {
-        var data = res;
-        var htmlString = "";
-        for (var i = 0; i < res.length; i++) {
-             htmlString += `vjdsnfkdfdkgdg dmgkdf gm dgmgk dfKDFMDKMFGKMkmkmk
-              <tr>  
-                    <td>${data[i]["STD_ID"].toUpperCase()}</td>
-                    <td>${data[i]["Receipt_No"]}</td>
-                    <td>${data[i]["Date"]}</td>
-                    <td>${data[i]["Student_name"].toUpperCase()}</td>
-                    <td>${data[i]["Cource"].toUpperCase()}</td>       
-                    <td>${data[i]["PaidFess"]}</td>
-                    <td>${data[i]["Due_fees"]}</td>
-                    <td>${data[i]["Payment_type"]}</td>                   
-                    <td style="width:1%" onclick="GetReceiptById(${data[i]["ID"]})"><center><i class="fas fa-edit"></i></center></td> 
-             </tr>`
-        }
-       
-        $('#ReceiptListBody').html(htmlString);
-
-    })
-
+function GetReceiptById(id) {
+    debugger
 }
+
+function GetAllReceipts() {
+    $("#example1").DataTable(
+        {
+            "responsive": true, "lengthChange": true, "autoWidth": false,
+            /*       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],*/
+            "ajax": {
+                "url": "/Home/GetAllReceipt",
+                "type": "GET",
+                "datatype": "json"
+            },
+            "columns": [
+                { "data": "STD_ID" },
+                { "data": "Receipt_No" },
+                { "data": "Date" },
+                { "data": "Student_name" },
+                { "data": "Cource" },
+                { "data": "PaidFess" },
+                { "data": "Due_fees" },
+                { "data": "Payment_type" },
+                //{
+                //    "data": "Action",
+                //    "name": "Action",
+                //    mRender: function (data, type, full) {
+                //        return `<button>Edit</button>`;
+                //    }
+                //}
+            ],
+            "dom": 'Bfrtip',
+            "buttons": [
+                {
+                    extend: 'copy',
+                    className: 'btn btn-dark rounded-0',
+                    text: '<i class="far fa-copy"></i> Copy'
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-dark rounded-0',
+                    text: '<i class="far fa-file-excel"></i> Excel'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-dark rounded-0',
+                    text: '<i class="far fa-file-pdf"></i> Pdf'
+                },
+                {
+                    extend: 'csv',
+                    className: 'btn btn-dark rounded-0',
+                    text: '<i class="fas fa-file-csv"></i> CSV'
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-dark rounded-0',
+                    text: '<i class="fas fa-print"></i> Print'
+                }
+            ]
+        });
+}
+
+$(document).on('click', '#ReceiptList', function () {
+
+    $('#CreateReportPlus').click();
+})
+
+$(document).on('click', '#CreateReportPlus', function () {
+    var coutn = 0;
+    if (coutn != 0) {
+        $('#ReceiptList').click();
+    }
+    coutn++;
+    
+})

@@ -84,6 +84,7 @@
           <Property Name="Payment_type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <ComplexType Name="GetAllReceipt_Result">
+          <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="String" Name="STD_ID" Nullable="true" MaxLength="50" />
           <Property Type="Int32" Name="Receipt_No" Nullable="true" />
           <Property Type="String" Name="Date" Nullable="true" MaxLength="50" />
@@ -136,6 +137,7 @@
           <FunctionImportMapping FunctionImportName="GetAllReceipt" FunctionName="GMCEModel.Store.GetAllReceipt">
             <ResultMapping>
               <ComplexTypeMapping TypeName="GMCEModel.GetAllReceipt_Result">
+                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="STD_ID" ColumnName="STD_ID" />
                 <ScalarProperty Name="Receipt_No" ColumnName="Receipt_No" />
                 <ScalarProperty Name="Date" ColumnName="Date" />

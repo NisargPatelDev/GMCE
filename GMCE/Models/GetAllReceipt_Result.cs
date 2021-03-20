@@ -13,6 +13,7 @@ namespace GMCE.Models
     
     public partial class GetAllReceipt_Result
     {
+        public int ID { get; set; }
         public string STD_ID { get; set; }
         public Nullable<int> Receipt_No { get; set; }
         public string Date { get; set; }
