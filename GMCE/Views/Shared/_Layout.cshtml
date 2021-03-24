@@ -40,7 +40,7 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button" id="ClickMe"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="index3.html" class="nav-link">Home</a>
@@ -165,8 +165,8 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="index3.html" class="brand-link">
-                <img src="~/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+            <a href="index3.html" class="brand-link">             
+                <img src="~/dist/GMLOGO.jpg" alt="GMCE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">GMCE</span>
             </a>
 
@@ -210,34 +210,23 @@
                                 <p>
                                     Reports
                                     <i class="fas fa-angle-left right"></i>
-                                    <span class="badge badge-info right">4</span>
+                                    <span class="badge badge-info right">2</span>
                                 </p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="pages/layout/top-nav.html" class="nav-link">
+                                    <a href="/Home/OutstandingReport" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Outstanding</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="pages/layout/top-nav-sidebar.html" class="nav-link">
+                                    <a href="/Home/CollectionReport" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Collection Report</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/boxed.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Student Report</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="pages/layout/fixed-sidebar.html" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Student Fess Report</p>
-                                    </a>
-                                </li>
+                               
 
                             </ul>
                         </li>
@@ -252,6 +241,11 @@
         @Scripts.Render("~/bundles/jquery")
         @Scripts.Render("~/bundles/bootstrap")
         @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            $('#ClickMe').click();
+        })
+    </script>
 
         <!-- jQuery -->
         <!--<script src="~/plugins/jquery/jqueryjquery.min.js"></script>-->

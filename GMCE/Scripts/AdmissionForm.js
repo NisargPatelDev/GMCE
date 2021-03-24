@@ -4,13 +4,17 @@ $(document).ready(function () {
     $('#AdmissionForm').removeClass("active");
     $('#recipet').removeClass("active");
     $('#Reports').removeClass("active");
-    $('#AdmissionForm').addClass("active");
+    $('#AdmissionForm').addClass("active");    
+    GetStdId();
+
+})
+
+function GetStdId() {
     $.get('/Home/GetStdId', function (res) {
         $('#STDID').val(res);
 
     })
-
-})
+}
 
 $(document).on('click', '#bntRegister', function () {
     ValidateRegistration();
@@ -97,6 +101,10 @@ function ValidateRegistration() {
             flag = 1;
         }
     }
+    else  {
+        ResgisterStudent();
+    }
+
     if (flag == 1) {
         ResgisterStudent();
     }
@@ -112,6 +120,8 @@ function ClearRegistrationForm() {
     $('#TotalFee').val("");
     $('#Age').val("");
     $('#DOB').val("");
+    GetStdId();
+    $("#STDID").prop('disabled', true);
 }
 
 $(document).on('change', '#RegistrationDate', function () {

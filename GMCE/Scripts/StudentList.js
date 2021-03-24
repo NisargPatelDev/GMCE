@@ -14,7 +14,7 @@ $(document).ready(function () {
     debugger
     $('#DateRange').daterangepicker();
     $('#DateRange').val("");
-    count++;
+    count++;   
     if (count != 0) {
         GetStudentList();
     }
@@ -26,6 +26,7 @@ $(document).ready(function () {
 
 })
 var DataCount = 0;
+var Table = "";
 function GetStudentList() {
     debugger
     var StartDate = "";
@@ -39,39 +40,150 @@ function GetStudentList() {
         StartDate = [split[1], split[0], split[2]].join('/');
         EndDate = [split2[1], split2[0], split2[2]].join('/');
     }
-    $.get('/Home/GetStudentList?minDate=' + StartDate + "&maxDate=" + EndDate + "&stdType=" + $('#SelectStdType').val(), function (res) {
-        debugger
-        var data = res;
-        var htmlString = "";
-        for (var i = 0; i < data.length; i++) {
-            var RegisterDate = new Date(parseInt(data[i]["Registration_date"].substr(6)));
-            RegisterDate = RegisterDate.toLocaleDateString();
-            split = RegisterDate.split('/');
-            RegisterDate = [split[1], split[0], split[2]].join('/');
-            split = data[i]["Start_date"].split('-');
-            StartDate = [split[2], split[1], split[0]].join('/');
-            htmlString += ` <tr>
-                    <td>${data[i]["STD_ID"].toUpperCase()}</td>
-                    <td>${data[i]["Student_name"].toUpperCase()}</td>
-                    <td>${data[i]["Cource"].toUpperCase()}</td>
-                    <td>${data[i]["Total_fees"]}</td>
-                    <td>${data[i]["Due_fees"]}</td>       
-                    <td>${data[i]["Student_mobile"]}</td>
-                    <td>${RegisterDate}</td>                    
-                    <td>${StartDate}</td>                                                          
-                    <td style="width:1%" onclick="MoveStudent(${data[i]["ID"]})"><center><i class="fas fa-box-open"></i></center></td>                    
-                    <td style="width:1%" onclick="GetStudentById(${data[i]["ID"]})"><center><i class="fas fa-edit"></i></center></td>                    
-          </tr>`
+    Table = $("#example1").DataTable(
+        {
+            deferRender: true,
+            "responsive": true, "lengthChange": true, "autoWidth": false,
+            /*       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],*/
+            "ajax": {
+                "url": '/Home/GetStudentList?minDate=' + StartDate + " &maxDate=" + EndDate + "&stdType=" + $('#SelectStdType').val(),
+                "type": "GET",
+                "datatype": "json"
+            },
+
+            "columns": [
+                {
+                    "data": "STD_ID",
+                    "width": "5%",
+                    mRender: function (data, type, full) {                       
+                        return data.toUpperCase();
+                    }
+
+                },
+                {
+                    "data": "Student_name", "width": "25%",
+                    mRender: function (data, type, full) {
+                        return data.toUpperCase();
+                    }
+                },
+                {
+                    "data": "Cource",
+                    mRender: function (data, type, full) {
+                        return data.toUpperCase();
+                    }
+                },
+                { "data": "Total_fees", "width": "5%" },
+                { "data": "Due_fees" },
+                { "data": "Student_mobile" },
+                {
+                    "data": "Registration_date",
+                    mRender: function (data, type, full) {
+                        var RegisterDate = new Date(parseInt(data.substr(6)));
+                        RegisterDate = RegisterDate.toLocaleDateString();
+                        split = RegisterDate.split('/');
+                        RegisterDate = [split[1], split[0], split[2]].join('/');
+                        return RegisterDate;
+                    }
+                },
+                {
+                    "data": "Start_date",
+                    mRender: function (data, type, full) {
+                        var split = data.split('-');
+                        var StartDate = [split[2], split[1], split[0]].join('/');
+                        return StartDate;
+                    }
+                },
+                {
+                    "data": "ID",
+                      mRender: function (data, type, full) {
+                        
+                          return `<a style="width:1%" onclick="MoveStudent(${data})" > <center><i class="fas fa-box-open"></i></center></a>`;
+                    }
+                },
+                {
+                    "data": "ID",
+                    mRender: function (data, type, full) {
+
+                        return ` <a style="width:1%" onclick="GetStudentById(${data})"><center><i class="fas fa-edit"></i></center></a>`;
+                    }
+                },               
+                //{
+                //    "data": "Action",
+                //    "name": "Action",
+                //    mRender: function (data, type, full) {
+                //        return `<button>Edit</button>`;
+                //    }
+                //}
+            ],
+            "dom": 'Bfrtip',
+            "buttons": [
+                {
+                    extend: 'excel',
+                    className: 'btn btn-dark rounded-0',
+                    text: '<i class="far fa-file-excel"></i> Excel',
+                    /* title : ,*/
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-dark rounded-0',
+                    text: '<i class="far fa-file-pdf"></i> Pdf',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    }
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-dark rounded-0',
+                    text: '<i class="fas fa-print"></i> Print',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3,4,5,6,7]
+                    }
+                },
+                'colvis'
+            ],
+            //"initComplete": function (settings, json) {
+            //    debugger
+            //    GetTotal(TotalPaidFess);
+            //}
         }
-        $('#StudentListBody').html(htmlString);
+    );
 
-        if (DataCount == 0) {
-            GetDatatable();
-        }
-        DataCount++;
+    //$.get('/Home/GetStudentList?minDate=' + StartDate + "&maxDate=" + EndDate + "&stdType=" + $('#SelectStdType').val(), function (res) {
+    //    debugger
+    //    var data = res;
+    //    var htmlString = "";
+    //    for (var i = 0; i < data.length; i++) {
+    //        var RegisterDate = new Date(parseInt(data[i]["Registration_date"].substr(6)));
+    //        RegisterDate = RegisterDate.toLocaleDateString();
+    //        split = RegisterDate.split('/');
+    //        RegisterDate = [split[1], split[0], split[2]].join('/');
+    //        split = data[i]["Start_date"].split('-');
+    //        StartDate = [split[2], split[1], split[0]].join('/');
+    //        htmlString += ` <tr>
+    //                <td>${data[i]["STD_ID"].toUpperCase()}</td>
+    //                <td>${data[i]["Student_name"].toUpperCase()}</td>
+    //                <td>${data[i]["Cource"].toUpperCase()}</td>
+    //                <td>${data[i]["Total_fees"]}</td>
+    //                <td>${data[i]["Due_fees"]}</td>       
+    //                <td>${data[i]["Student_mobile"]}</td>
+    //                <td>${RegisterDate}</td>                    
+    //                <td>${StartDate}</td>                                                          
+    //                <td style="width:1%" onclick="MoveStudent(${data[i]["ID"]})"><center><i class="fas fa-box-open"></i></center></td>                    
+    //                <td style="width:1%" onclick="GetStudentById(${data[i]["ID"]})"><center><i class="fas fa-edit"></i></center></td>                    
+    //      </tr>`
+    //    }
+    //    $('#StudentListBody').html(htmlString);
+
+    //    if (DataCount == 0) {
+    //        GetDatatable();
+    //    }
+    //    DataCount++;
 
 
-    })
+    //})
 }
 
 //function getStudentListWithFilter() {
@@ -100,6 +212,7 @@ function GetStudentList() {
 $(document).on('click', '#ClearDateRange', function () {
     $('#DateRange').val("");
     if (count != 0) {
+        Table.destroy();
         GetStudentList();
     }
 })
@@ -107,6 +220,7 @@ $(document).on('click', '#ClearDateRange', function () {
 
 $(document).on('change', '#DateRange', function () {
     if (count != 0) {
+        Table.destroy();
         GetStudentList();
     }
 
@@ -149,6 +263,7 @@ function Passout(id) {
                         swal("Student Moved To Passout", {
                             icon: "success",
                         });
+                        Table.destroy();
                         GetStudentList();
                     }
                 });
@@ -178,6 +293,7 @@ function Dropout(id) {
                         swal("Student Moved To Dropout", {
                             icon: "success",
                         });
+                        Table.destroy();
                         GetStudentList();
                     }
                 });
@@ -207,6 +323,7 @@ function Running(id) {
                         swal("Student Moved To Running", {
                             icon: "success",
                         });
+                        Table.destroy();
                         GetStudentList();
                     }
                 });
@@ -254,6 +371,7 @@ function GetStudentById(id) {
 
 $(document).on('change', '#SelectStdType', function () {
     isfiltered = 1;
+    Table.destroy();
     GetStudentList();
 })
 
@@ -345,7 +463,7 @@ function ResgisterStudent() {
         success: function () {
             $('#EditModal').modal('hide');
                 alert("STD ID : " + $('#STDID').val() + " Name : " + $('#StudentName').val() + " is Edited");
-                
+            Table.destroy();
             GetStudentList();
         }
        

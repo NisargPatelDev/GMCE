@@ -1,10 +1,13 @@
-﻿$(document).ready(function () {
+﻿
+
+
+$(document).ready(function () {
     $('#StudentList').removeClass("active");
     $('#AdmissionForm').removeClass("active");
     $('#receipt').removeClass("active");
     $('#Reports').removeClass("active");
     $('#receipt').addClass("active");
-    $('#CreateReportPlus').click();
+
     GetAllReceipts();
 
 })
@@ -69,7 +72,7 @@ $(document).on('keyup', '#TotalFee', function () {
 
 function CreateReceipt() {
     var ReObj = {
-        STDID: $('#STDID').val(),
+        STDID: $('#STDID').val().toUpperCase(),
         Date: $('#Date').val(),
         Receipt_No: $('#ReceiptNo').val(),
         PaidFess: $('#TotalFee').val(),
@@ -86,7 +89,7 @@ function CreateReceipt() {
             if (result != "0") {
                 alert("Receipt Created");
                 ClearReceiptForm()
-                GetAllReceipts();
+                location.reload();
             }
             else {
                 alert("Receipt No Already Exsits")
@@ -139,78 +142,5 @@ function ClearReceiptForm() {
     $('#FeesInWord').val("");
 }
 
-function GetReceiptById(id) {
-    debugger
-}
 
-function GetAllReceipts() {
-    $("#example1").DataTable(
-        {
-            "responsive": true, "lengthChange": true, "autoWidth": false,
-            /*       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],*/
-            "ajax": {
-                "url": "/Home/GetAllReceipt",
-                "type": "GET",
-                "datatype": "json"
-            },
-            "columns": [
-                { "data": "STD_ID" },
-                { "data": "Receipt_No" },
-                { "data": "Date" },
-                { "data": "Student_name" },
-                { "data": "Cource" },
-                { "data": "PaidFess" },
-                { "data": "Due_fees" },
-                { "data": "Payment_type" },
-                //{
-                //    "data": "Action",
-                //    "name": "Action",
-                //    mRender: function (data, type, full) {
-                //        return `<button>Edit</button>`;
-                //    }
-                //}
-            ],
-            "dom": 'Bfrtip',
-            "buttons": [
-                {
-                    extend: 'copy',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="far fa-copy"></i> Copy'
-                },
-                {
-                    extend: 'excel',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="far fa-file-excel"></i> Excel'
-                },
-                {
-                    extend: 'pdf',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="far fa-file-pdf"></i> Pdf'
-                },
-                {
-                    extend: 'csv',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="fas fa-file-csv"></i> CSV'
-                },
-                {
-                    extend: 'print',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="fas fa-print"></i> Print'
-                }
-            ]
-        });
-}
 
-$(document).on('click', '#ReceiptList', function () {
-
-    $('#CreateReportPlus').click();
-})
-
-$(document).on('click', '#CreateReportPlus', function () {
-    var coutn = 0;
-    if (coutn != 0) {
-        $('#ReceiptList').click();
-    }
-    coutn++;
-    
-})

@@ -29,6 +29,16 @@ namespace GMCE.Controllers
             return View();
         }
 
+        public ActionResult CollectionReport()
+        {
+            return View();
+        }
+
+        public ActionResult OutstandingReport()
+        {
+            return View();
+        }
+
         public JsonResult RegisterStudent(Student_Matser std)
         {
             var msg = "";
@@ -84,13 +94,13 @@ namespace GMCE.Controllers
                 var StartDate = Convert.ToDateTime(minDate);
                 var EndDate = Convert.ToDateTime(maxDate);
                 var result = _context.Student_Matser.Where(x => x.Status == stdType).Where(entry => entry.Registration_date >= StartDate && entry.Registration_date <= EndDate).ToList();
-                return Json(result, JsonRequestBehavior.AllowGet);
+                return Json(new { data = result }, JsonRequestBehavior.AllowGet);
             }
             else
             {
                 var lst = _context.Student_Matser.Where(x => x.Status == stdType).ToList();
 
-                return Json(lst, JsonRequestBehavior.AllowGet);
+                return Json(new { data = lst }, JsonRequestBehavior.AllowGet);
             }
 
         }
@@ -164,11 +174,90 @@ namespace GMCE.Controllers
             return Json(msg, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetAllReceipt()
+        public JsonResult GetAllReceiptForFE(string minDate, string maxDate)
         {
+            if (minDate != "" && maxDate != null)
+            {
+                var StartDate = Convert.ToDateTime(minDate);
+                var EndDate = Convert.ToDateTime(maxDate);
+                var result = _context.GetAllReceipt().Where(entry => Convert.ToDateTime(entry.Date) >= StartDate && Convert.ToDateTime(entry.Date) <= EndDate).ToList();
+                return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+            }
             var Data = _context.GetAllReceipt().ToList();
             return Json(new { data = Data}, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult GetReceiptById(int id)
+        { 
+            var data = _context.GetAllReceipt().FirstOrDefault(x => x.ID == id);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult IsReceiptNoAlreadyExsist(int no)
+        {
+            var Id = _context.Receipt_Master.FirstOrDefault(x => x.Receipt_No == no);
+            var msg = 1;
+            if (Id != null)
+            {
+                msg = 0;
+            }
+            return Json(msg, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult EditReceipt(int id, Receipt_Master std)
+        {
+            var isDataExsist = _context.Receipt_Master.FirstOrDefault(x => x.ID == id);
+            if (isDataExsist != null)
+            {
+                isDataExsist.Receipt_No= std.Receipt_No;
+                isDataExsist.STDID = std.STDID;
+                isDataExsist.Date = std.Date;
+                isDataExsist.PaidFess = std.PaidFess;
+                isDataExsist.FessInWords = std.FessInWords;
+                isDataExsist.Payment_type = std.Payment_type;
+
+                var Data = _context.Student_Matser.FirstOrDefault(x => x.STD_ID == isDataExsist.STDID);
+                if (Data != null)
+                {
+                    var Due = Convert.ToInt32(Data.Total_fees) - GetDueFees(isDataExsist.STDID);
+                    Data.Due_fees = Due.ToString();
+                }
+                _context.SaveChanges();
+            }
+            return Json(JsonRequestBehavior.AllowGet);
+        }
+
+        public int GetDueFees(String stdid) {
+            var DuesFee = _context.Receipt_Master.Where(x => x.STDID == stdid).ToList();
+            var Total = 0;
+            if (DuesFee != null)
+            {
+               
+                for (int i = 0; i < DuesFee.Count; i++)
+                {
+                    Total += Convert.ToInt32(DuesFee[i].PaidFess);
+                }
+            }
+            return Total;           
+        }
+
+        public JsonResult GetOutStandingReport(string minDate, string maxDate)
+        {
+
+            if (minDate != "" && maxDate != "")
+            {
+                var StartDate = Convert.ToDateTime(minDate);
+                var EndDate = Convert.ToDateTime(maxDate);
+                var result = _context.Student_Matser.Where(x => x.Due_fees != "0").Where(entry => entry.Registration_date >= StartDate && entry.Registration_date <= EndDate).ToList();
+                return Json(new { data = result }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var lst = _context.Student_Matser.Where(x => x.Due_fees != "0").ToList();
+
+                return Json(new { data = lst }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
     }
 }

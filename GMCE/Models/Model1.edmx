@@ -93,6 +93,7 @@
           <Property Type="Decimal" Name="PaidFess" Nullable="true" Precision="18" Scale="2" />
           <Property Type="String" Name="Due_fees" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Payment_type" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="FessInWords" Nullable="true" MaxLength="50" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -146,6 +147,7 @@
                 <ScalarProperty Name="PaidFess" ColumnName="PaidFess" />
                 <ScalarProperty Name="Due_fees" ColumnName="Due_fees" />
                 <ScalarProperty Name="Payment_type" ColumnName="Payment_type" />
+                <ScalarProperty Name="FessInWords" ColumnName="FessInWords" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

@@ -1,0 +1,163 @@
+﻿<div class="card">
+    <!-- /.card-header -->
+    <div class="card-header">
+        <h3 class="card-title" style="margin-left:41%;color:Highlight;font-weight:600;font-size:x-large">OUTSTANDING REPORT</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" id="ReceiptList">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div style="margin-bottom:4%">
+            <label>Date range:</label>
+
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                </div>
+                <input type="text" class="form-control float-right" id="DateRange">
+                <span><button class="btn btn-primary" id="ClearDateRange">Clear</button></span>
+            </div>
+
+        </div>
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>STD ID</th>                    
+                    <th>Stud_Name</th>
+                    <th>Course</th>
+                    <th>Tot-Fees</th>
+                    <th>Tot-Due</th>
+                    <th>Inst.</th>
+                    <th>Date</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody id="ReceiptListBody">
+            </tbody>
+        </table>
+        <!-- /.form group -->
+    </div>
+    <div>
+        <center><p style="font-weight:bold;color:green;" id="TotalCollection"></p></center>
+    </div>
+
+</div>
+
+
+<div class="modal bd-example-modal-lg" tabindex="-1" id="EditReceiptModal" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="overflow:hidden;margin-top:4%">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Student Data</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" class="form-control" id="DateE" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask>
+                            <input type="hidden" id="HdnId" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Receipt No</label>
+                            <input type="number" id="ReceiptNoE" class="form-control" style="text-transform:uppercase" />
+                        </div>
+                        <!-- /.form-group -->
+                        <!-- /.form-group -->
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>STD ID</label>
+                            <input type="text" id="STDIDE" class="form-control" style="text-transform:uppercase" />
+                        </div>
+                        <!-- /.form-group -->
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                    <!-- /.col -->
+                </div>
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Student Name</label>
+                            <input type="Text" id="StudentNameE" class="form-control" style="text-transform:uppercase" disabled />
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-12 col-sm-6">
+                        <div class="form-group">
+                            <label>Course</label>
+                            <input type="Text" id="CourceE" class="form-control" style="text-transform:uppercase" disabled />
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <!-- /.col -->
+                </div>
+
+
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-12 col-sm-4">
+                        <div class="form-group">
+                            <label>Total Rs:</label>
+                            <input type="number" id="TotalFeeE" class="form-control">
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+                    <div class="col-12 col-sm-4" style=" margin-top: 3%;">
+                        <div class="form-group">
+                            <label>Fees Type : </label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="FeesTypeE" value="CASH" checked="checked">
+                                <label class="form-check-label" for="inlineRadio1">CASH</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="FeesTypeE" value="CHEQUE">
+                                <label class="form-check-label" for="inlineRadio2">CHEQUE</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="FeesTypeE" value="OTHER">
+                                <label class="form-check-label" for="inlineRadio2">OTHER</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-4">
+                        <div class="form-group">
+                            <label>Fees In Words:</label>
+                            <input type="text" id="FeesInWordsE" class="form-control" disabled>
+                        </div>
+                        <!-- /.form-group -->
+                    </div>
+
+                    <!-- /.col -->
+                    <!-- /.col -->
+                </div>
+
+
+                <!-- /.row -->
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="margin-left:81%">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnEditReceipt">Save</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Scripts/OutstandingReport.js"></script>
+    @*<script src="~/Scripts/CollectionReport.js"></script>*@
+}

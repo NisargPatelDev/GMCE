@@ -22,5 +22,6 @@ namespace GMCE.Models
         public Nullable<decimal> PaidFess { get; set; }
         public string Due_fees { get; set; }
         public string Payment_type { get; set; }
+        public string FessInWords { get; set; }
     }
 }
