@@ -76,6 +76,12 @@ namespace GMCE.Controllers
                 isDataExsist.DOB = std.DOB;
                 isDataExsist.Age = std.Age;
                 isDataExsist.Gender = std.Gender;
+                var Data = _context.Receipt_Master.FirstOrDefault(x => x.STDID == isDataExsist.STD_ID);
+                if (Data != null)
+                {
+                    var Due = Convert.ToInt32(isDataExsist.Total_fees) - GetDueFees(isDataExsist.STD_ID);
+                    isDataExsist.Due_fees = Due.ToString();
+                }
                 _context.SaveChanges();
             }
             return Json(JsonRequestBehavior.AllowGet);
@@ -248,12 +254,12 @@ namespace GMCE.Controllers
             {
                 var StartDate = Convert.ToDateTime(minDate);
                 var EndDate = Convert.ToDateTime(maxDate);
-                var result = _context.Student_Matser.Where(x => x.Due_fees != "0").Where(entry => entry.Registration_date >= StartDate && entry.Registration_date <= EndDate).ToList();
+                var result = _context.Student_Matser.Where(x=>x.Status == "RUNNING").Where(x => x.Due_fees != "0").Where(entry => entry.Registration_date >= StartDate && entry.Registration_date <= EndDate).ToList();
                 return Json(new { data = result }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                var lst = _context.Student_Matser.Where(x => x.Due_fees != "0").ToList();
+                var lst = _context.Student_Matser.Where(x => x.Due_fees != "0").Where(x => x.Status == "RUNNING").ToList();
 
                 return Json(new { data = lst }, JsonRequestBehavior.AllowGet);
             }

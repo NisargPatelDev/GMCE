@@ -33,6 +33,7 @@ function GetAllReceipts() {
     Table = $("#example1").DataTable(
         {
             deferRender: true,
+            "searching": true,
             "responsive": true, "lengthChange": true, "autoWidth": false,
             /*       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],*/
             "ajax": {
