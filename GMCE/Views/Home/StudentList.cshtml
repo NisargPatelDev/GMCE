@@ -53,16 +53,33 @@
         <table id="example1" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>STD ID</th>
-                    <th>Student Name</th>
-                    <th>Course</th>
-                    <th>Total-Fees</th>
-                    <th>Total-Due</th>
-                    <th>Student MO</th>
-                    <th>Register Date</th>
-                    <th>Start Date</th>                   
-                    <th>Move</th>
-                    <th>Action</th>                   
+                    @{ if (Session["UserName"].ToString() == "admin")
+                        {
+                            <th>STD ID</th>
+                            <th>Student Name</th>
+                            <th>Course</th>
+                            <th>Total-Fees</th>
+                            <th>Total-Due</th>
+                            <th>Student MO</th>
+                            <th>Register Date</th>
+                            <th>Start Date</th>
+                            <th>Move</th>
+                            <th>Action</th>
+
+                        }
+                        else
+                        {
+                            <th>STD ID</th>
+                            <th>Student Name</th>
+                            <th>Course</th>
+                            <th>Total-Fees</th>
+                            <th>Total-Due</th>
+                            <th>Student MO</th>
+                            <th>Register Date</th>
+                            <th>Start Date</th>                           
+                        }
+                    }
+
 
                 </tr>
             </thead>
@@ -269,6 +286,12 @@
 
 
 @section scripts{
+    <script>
+       @{
+            var user = Session["UserName"].ToString();
 
+         }
+        var user = "@user.ToString()";
+    </script>
     <script src="~/Scripts/StudentList.js"></script>
 }

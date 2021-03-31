@@ -120,7 +120,7 @@ function GetAllReceipts() {
                 }
             ],
             "initComplete": function (settings, json) {
-                debugger
+                
                 GetTotal(TotalDue);
             }
         }

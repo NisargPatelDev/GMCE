@@ -11,7 +11,7 @@ function GetDatatable() {
 
 var count = 0;
 $(document).ready(function () {
-    debugger
+    
     $('#DateRange').daterangepicker();
     $('#DateRange').val("");
     count++;   
@@ -28,7 +28,7 @@ $(document).ready(function () {
 var DataCount = 0;
 var Table = "";
 function GetStudentList() {
-    debugger
+   
     var StartDate = "";
     var EndDate = "";
     var isfiltered = 0;
@@ -40,117 +40,221 @@ function GetStudentList() {
         StartDate = [split[1], split[0], split[2]].join('/');
         EndDate = [split2[1], split2[0], split2[2]].join('/');
     }
-    Table = $("#example1").DataTable(
-        {
-            deferRender: true,
-            "responsive": true, "lengthChange": true, "autoWidth": false,
-            /*       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],*/
-            "ajax": {
-                "url": '/Home/GetStudentList?minDate=' + StartDate + " &maxDate=" + EndDate + "&stdType=" + $('#SelectStdType').val(),
-                "type": "GET",
-                "datatype": "json"
-            },
+    debugger
+    if (user == "admin") {
+        Table = $("#example1").DataTable(
+            {
+                deferRender: true,
+                "responsive": true, "lengthChange": true, "autoWidth": false,
+                /*       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],*/
+                "ajax": {
+                    "url": '/Home/GetStudentList?minDate=' + StartDate + " &maxDate=" + EndDate + "&stdType=" + $('#SelectStdType').val(),
+                    "type": "GET",
+                    "datatype": "json"
+                },
 
-            "columns": [
-                {
-                    "data": "STD_ID",
-                    "width": "5%",
-                    mRender: function (data, type, full) {                       
-                        return data.toUpperCase();
-                    }
+                "columns": [
+                    {
+                        "data": "STD_ID",
+                        "width": "5%",
+                        mRender: function (data, type, full) {
+                            return data.toUpperCase();
+                        }
 
-                },
-                {
-                    "data": "Student_name", "width": "25%",
-                    mRender: function (data, type, full) {
-                        return data.toUpperCase();
-                    }
-                },
-                {
-                    "data": "Cource",
-                    mRender: function (data, type, full) {
-                        return data.toUpperCase();
-                    }
-                },
-                { "data": "Total_fees", "width": "5%" },
-                { "data": "Due_fees" },
-                { "data": "Student_mobile" },
-                {
-                    "data": "Registration_date",
-                    mRender: function (data, type, full) {
-                        var RegisterDate = new Date(parseInt(data.substr(6)));
-                        RegisterDate = RegisterDate.toLocaleDateString();
-                        split = RegisterDate.split('/');
-                        RegisterDate = [split[1], split[0], split[2]].join('/');
-                        return RegisterDate;
-                    }
-                },
-                {
-                    "data": "Start_date",
-                    mRender: function (data, type, full) {
-                        var split = data.split('-');
-                        var StartDate = [split[2], split[1], split[0]].join('/');
-                        return StartDate;
-                    }
-                },
-                {
-                    "data": "ID",
-                      mRender: function (data, type, full) {
-                        
-                          return `<a style="width:1%" onclick="MoveStudent(${data})" > <center><i class="fas fa-box-open"></i></center></a>`;
-                    }
-                },
-                {
-                    "data": "ID",
-                    mRender: function (data, type, full) {
+                    },
+                    {
+                        "data": "Student_name", "width": "25%",
+                        mRender: function (data, type, full) {
+                            return data.toUpperCase();
+                        }
+                    },
+                    {
+                        "data": "Cource",
+                        mRender: function (data, type, full) {
+                            return data.toUpperCase();
+                        }
+                    },
+                    { "data": "Total_fees", "width": "5%" },
+                    { "data": "Due_fees" },
+                    { "data": "Student_mobile" },
+                    {
+                        "data": "Registration_date",
+                        mRender: function (data, type, full) {
+                            var RegisterDate = new Date(parseInt(data.substr(6)));
+                            RegisterDate = RegisterDate.toLocaleDateString();
+                            split = RegisterDate.split('/');
+                            RegisterDate = [split[1], split[0], split[2]].join('/');
+                            return RegisterDate;
+                        }
+                    },
+                    {
+                        "data": "Start_date",
+                        mRender: function (data, type, full) {
+                            var split = data.split('-');
+                            var StartDate = [split[2], split[1], split[0]].join('/');
+                            return StartDate;
+                        }
+                    },
+                    {
+                        "data": "ID",
+                        mRender: function (data, type, full) {
 
-                        return ` <a style="width:1%" onclick="GetStudentById(${data})"><center><i class="fas fa-edit"></i></center></a>`;
-                    }
-                },               
-                //{
-                //    "data": "Action",
-                //    "name": "Action",
-                //    mRender: function (data, type, full) {
-                //        return `<button>Edit</button>`;
-                //    }
+                            return `<a style="width:1%" onclick="MoveStudent(${data})" > <center><i class="fas fa-box-open"></i></center></a>`;
+                        }
+                    },
+                    {
+                        "data": "ID",
+                        mRender: function (data, type, full) {
+
+                            return `<a style="width:1%" onclick="GetStudentById(${data})"><center><i class="fas fa-edit"></i></center></a>
+                        <a style="width:1%" onclick="deleteStudent(${data})"><center><i class="far fa-trash-alt"></i></center></a>`;
+                        }
+                    },
+                    //{
+                    //    "data": "Action",
+                    //    "name": "Action",
+                    //    mRender: function (data, type, full) {
+                    //        return `<button>Edit</button>`;
+                    //    }
+                    //}
+                ],
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="far fa-file-excel"></i> Excel',
+                        /* title : ,*/
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="far fa-file-pdf"></i> Pdf',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="fas fa-print"></i> Print',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        }
+                    },
+                    'colvis'
+                ],
+                //"initComplete": function (settings, json) {
+                //    debugger
+                //    GetTotal(TotalPaidFess);
                 //}
-            ],
-            "dom": 'Bfrtip',
-            "buttons": [
-                {
-                    extend: 'excel',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="far fa-file-excel"></i> Excel',
-                    /* title : ,*/
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
-                    }
-                },
-                {
-                    extend: 'pdf',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="far fa-file-pdf"></i> Pdf',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
-                    }
-                },
-                {
-                    extend: 'print',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="fas fa-print"></i> Print',
-                    exportOptions: {
-                        columns: [0, 1, 2, 3,4,5,6,7]
-                    }
-                },
-                'colvis'
-            ],
-            //"initComplete": function (settings, json) {
-            //    debugger
-            //    GetTotal(TotalPaidFess);
-            //}
-        }
-    );
+            }
+        );
 
+    }
+    else {
+        Table = $("#example1").DataTable(
+            {
+                deferRender: true,
+                "responsive": true, "lengthChange": true, "autoWidth": false,
+                /*       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],*/
+                "ajax": {
+                    "url": '/Home/GetStudentList?minDate=' + StartDate + " &maxDate=" + EndDate + "&stdType=" + $('#SelectStdType').val(),
+                    "type": "GET",
+                    "datatype": "json"
+                },
+
+                "columns": [
+                    {
+                        "data": "STD_ID",
+                        "width": "5%",
+                        mRender: function (data, type, full) {
+                            return data.toUpperCase();
+                        }
+
+                    },
+                    {
+                        "data": "Student_name", "width": "25%",
+                        mRender: function (data, type, full) {
+                            return data.toUpperCase();
+                        }
+                    },
+                    {
+                        "data": "Cource",
+                        mRender: function (data, type, full) {
+                            return data.toUpperCase();
+                        }
+                    },
+                    { "data": "Total_fees", "width": "5%" },
+                    { "data": "Due_fees" },
+                    { "data": "Student_mobile" },
+                    {
+                        "data": "Registration_date",
+                        mRender: function (data, type, full) {
+                            var RegisterDate = new Date(parseInt(data.substr(6)));
+                            RegisterDate = RegisterDate.toLocaleDateString();
+                            split = RegisterDate.split('/');
+                            RegisterDate = [split[1], split[0], split[2]].join('/');
+                            return RegisterDate;
+                        }
+                    },
+                    {
+                        "data": "Start_date",
+                        mRender: function (data, type, full) {
+                            var split = data.split('-');
+                            var StartDate = [split[2], split[1], split[0]].join('/');
+                            return StartDate;
+                        }
+                    },                    
+                    //{
+                    //    "data": "Action",
+                    //    "name": "Action",
+                    //    mRender: function (data, type, full) {
+                    //        return `<button>Edit</button>`;
+                    //    }
+                    //}
+                ],
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="far fa-file-excel"></i> Excel',
+                        /* title : ,*/
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="far fa-file-pdf"></i> Pdf',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="fas fa-print"></i> Print',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                        }
+                    },
+                    'colvis'
+                ],
+                //"initComplete": function (settings, json) {
+                //    debugger
+                //    GetTotal(TotalPaidFess);
+                //}
+            }
+        );
+
+    }
+    
     //$.get('/Home/GetStudentList?minDate=' + StartDate + "&maxDate=" + EndDate + "&stdType=" + $('#SelectStdType').val(), function (res) {
     //    debugger
     //    var data = res;
@@ -336,7 +440,7 @@ function Running(id) {
 var STDID = "";
 function GetStudentById(id) {
     $.get('/Home/GetStudentById?id=' + id, function (res) {
-        debugger
+        
         var RegisterDate = new Date(parseInt(res.Registration_date.substr(6)));
         RegisterDate = RegisterDate.toLocaleDateString();
         split = RegisterDate.split('/');
@@ -477,6 +581,34 @@ $(document).on('change', '#DOB', function () {
     $('#Age').val(Age);
 })
 
+function deleteStudent(id) {
+    swal({
+        title: "Are you sure?",
+        text: "You Want To DELETE This Student",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "/Home/RemoveStudent?id=" + id,
+                    type: "POST",
+                    dataType: "json",
+                    success: function () {
+                        swal("Student DELETED", {
+                            icon: "success",
+                        });
+                        Table.destroy();
+                        GetStudentList();
+                    }
+                });
 
+            } else {
+                swal("Student Is Not Deleted");
+            }
+        });
+
+}
 
 

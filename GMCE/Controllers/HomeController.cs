@@ -14,31 +14,96 @@ namespace GMCE.Controllers
         {
             _context = new GMCEEntities();
         }
-        public ActionResult Index()
+
+        public ActionResult Login()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(UserProfile objUser)
+        {
+            if (ModelState.IsValid)
+            {
+                using (GMCEEntities db = new GMCEEntities())
+                {
+                    var obj = db.UserProfiles.Where(a => a.UserName.Equals(objUser.UserName) && a.Password.Equals(objUser.Password)).FirstOrDefault();
+                    if (obj != null)
+                    {
+                        Session["UserID"] = obj.UserId.ToString();
+                        Session["UserName"] = obj.UserName.ToString();
+                        return RedirectToAction("Index");
+                    }
+                }
+            }
+            return View(objUser);
+        }
+        public ActionResult Index()
+        {
+            if (Session["UserID"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         public ActionResult StudentList()
         {
-            return View();
+            if (Session["UserID"] != null)
+            {                
+                    return View();                                                                 
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         public ActionResult Receipt()
         {
-            return View();
+            if (Session["UserID"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         public ActionResult CollectionReport()
         {
-            return View();
+            if (Session["UserID"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
         public ActionResult OutstandingReport()
         {
-            return View();
+            if (Session["UserID"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login");
+            }
         }
 
+        public JsonResult AbandonSession()
+        {
+            Session.Abandon();
+            return Json(JsonRequestBehavior.AllowGet);
+        }
         public JsonResult RegisterStudent(Student_Matser std)
         {
             var msg = "";
@@ -168,12 +233,12 @@ namespace GMCE.Controllers
             if (isReceiptExist == null)
             {
                 msg = 1;
-                _context.Receipt_Master.Add(Rec);               
+                _context.Receipt_Master.Add(Rec);
                 var DuesFee = _context.Student_Matser.FirstOrDefault(x => x.STD_ID == Rec.STDID);
                 if (DuesFee != null)
                 {
                     var Due = Convert.ToInt32(DuesFee.Due_fees) - Convert.ToInt32(Rec.PaidFess);
-                    DuesFee.Due_fees = Due.ToString();                     
+                    DuesFee.Due_fees = Due.ToString();
                 }
                 _context.SaveChanges();
             }
@@ -190,11 +255,11 @@ namespace GMCE.Controllers
                 return Json(new { data = result }, JsonRequestBehavior.AllowGet);
             }
             var Data = _context.GetAllReceipt().ToList();
-            return Json(new { data = Data}, JsonRequestBehavior.AllowGet);
+            return Json(new { data = Data }, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetReceiptById(int id)
-        { 
+        {
             var data = _context.GetAllReceipt().FirstOrDefault(x => x.ID == id);
             return Json(data, JsonRequestBehavior.AllowGet);
         }
@@ -215,7 +280,7 @@ namespace GMCE.Controllers
             var isDataExsist = _context.Receipt_Master.FirstOrDefault(x => x.ID == id);
             if (isDataExsist != null)
             {
-                isDataExsist.Receipt_No= std.Receipt_No;
+                isDataExsist.Receipt_No = std.Receipt_No;
                 isDataExsist.STDID = std.STDID;
                 isDataExsist.Date = std.Date;
                 isDataExsist.PaidFess = std.PaidFess;
@@ -233,18 +298,19 @@ namespace GMCE.Controllers
             return Json(JsonRequestBehavior.AllowGet);
         }
 
-        public int GetDueFees(String stdid) {
+        public int GetDueFees(String stdid)
+        {
             var DuesFee = _context.Receipt_Master.Where(x => x.STDID == stdid).ToList();
             var Total = 0;
             if (DuesFee != null)
             {
-               
+
                 for (int i = 0; i < DuesFee.Count; i++)
                 {
                     Total += Convert.ToInt32(DuesFee[i].PaidFess);
                 }
             }
-            return Total;           
+            return Total;
         }
 
         public JsonResult GetOutStandingReport(string minDate, string maxDate)
@@ -254,7 +320,7 @@ namespace GMCE.Controllers
             {
                 var StartDate = Convert.ToDateTime(minDate);
                 var EndDate = Convert.ToDateTime(maxDate);
-                var result = _context.Student_Matser.Where(x=>x.Status == "RUNNING").Where(x => x.Due_fees != "0").Where(entry => entry.Registration_date >= StartDate && entry.Registration_date <= EndDate).ToList();
+                var result = _context.Student_Matser.Where(x => x.Status == "RUNNING").Where(x => x.Due_fees != "0").Where(entry => entry.Registration_date >= StartDate && entry.Registration_date <= EndDate).ToList();
                 return Json(new { data = result }, JsonRequestBehavior.AllowGet);
             }
             else
@@ -264,6 +330,22 @@ namespace GMCE.Controllers
                 return Json(new { data = lst }, JsonRequestBehavior.AllowGet);
             }
 
+        }
+
+        public JsonResult RemoveStudent(int id)
+        {
+            var data = _context.Student_Matser.FirstOrDefault(x => x.ID == id);
+            _context.Student_Matser.Remove(data);
+            _context.SaveChanges();
+            return Json(JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult RemoveReceipt(int id)
+        {
+            var data = _context.Receipt_Master.FirstOrDefault(x => x.ID == id);
+            _context.Receipt_Master.Remove(data);
+            _context.SaveChanges();
+            return Json(JsonRequestBehavior.AllowGet);
         }
     }
 }

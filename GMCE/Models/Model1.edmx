@@ -37,10 +37,19 @@
           <Property Name="Gender" Type="varchar" MaxLength="50" />
           <Property Name="Due_fees" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="50" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+        </EntityType>
         <Function Name="GetAllReceipt" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="GMCEModelStoreContainer">
           <EntitySet Name="Receipt_Master" EntityType="Self.Receipt_Master" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Student_Matser" EntityType="Self.Student_Matser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -50,6 +59,7 @@
           <EntitySet Name="Student_Matser" EntityType="GMCEModel.Student_Matser" />
           <EntitySet Name="Receipt_Master" EntityType="GMCEModel.Receipt_Master" />
           <FunctionImport Name="GetAllReceipt" ReturnType="Collection(GMCEModel.GetAllReceipt_Result)" />
+          <EntitySet Name="UserProfiles" EntityType="GMCEModel.UserProfile" />
         </EntityContainer>
         <EntityType Name="Student_Matser">
           <Key>
@@ -95,6 +105,14 @@
           <Property Type="String" Name="Payment_type" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="FessInWords" Nullable="true" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -151,6 +169,15 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="UserProfiles">
+            <EntityTypeMapping TypeName="GMCEModel.UserProfile">
+              <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -30,98 +30,189 @@ function GetAllReceipts() {
         StartDate = [split[1], split[0], split[2]].join('/');
         EndDate = [split2[1], split2[0], split2[2]].join('/');
     }
-    Table = $("#example1").DataTable(
-        {
-            deferRender: true,
-            "searching": true,
-            "responsive": true, "lengthChange": true, "autoWidth": false,
-            /*       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],*/
-            "ajax": {
-                "url": "/Home/GetAllReceiptForFE?minDate=" + StartDate + "&maxDate=" + EndDate,
-                "type": "GET",
-                "datatype": "json"
-            },
-
-            "columns": [
-                { "data": "Receipt_No" , "width" : "5%"},
-                {
-                    "data": "Date", "width": "10%",
-                    mRender: function (data, type, full) {
-                        var split = data.split('-');
-                        var Date = [split[2], split[1], split[0]].join('/');
-                        return Date;
-                    }
+    if (user == "admin") {
+        Table = $("#example1").DataTable(
+            {
+                deferRender: true,
+                "searching": true,
+                "responsive": true, "lengthChange": true, "autoWidth": false,
+                /*       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],*/
+                "ajax": {
+                    "url": "/Home/GetAllReceiptForFE?minDate=" + StartDate + "&maxDate=" + EndDate,
+                    "type": "GET",
+                    "datatype": "json"
                 },
-                { "data": "STD_ID" },
-                { "data": "Student_name", "width": "25%"},
-                { "data": "Cource" },
-                {
-                    "data": "PaidFess",
-                    mRender: function (data, type, full) {
-                        if (countData == 0) {
-                            TotalPaidFess += full.PaidFess;
+
+                "columns": [
+                    { "data": "Receipt_No", "width": "5%" },
+                    {
+                        "data": "Date", "width": "10%",
+                        mRender: function (data, type, full) {
+                            var split = data.split('-');
+                            var Date = [split[2], split[1], split[0]].join('/');
+                            return Date;
                         }
-                        return full.PaidFess;
-                    }
-                },
-                { "data": "Payment_type" },
-                {
-                    "data": "Payment_type",
-                    "width": "5%",
-                    mRender: function (data, type, full) {
-                        return `    `;
-                    }
+                    },
+                    { "data": "STD_ID" },
+                    { "data": "Student_name", "width": "25%" },
+                    { "data": "Cource" },
+                    {
+                        "data": "PaidFess",
+                        mRender: function (data, type, full) {
+                            if (countData == 0) {
+                                TotalPaidFess += full.PaidFess;
+                            }
+                            return full.PaidFess;
+                        }
+                    },
+                    { "data": "Payment_type" },
+                    {
+                        "data": "Payment_type",
+                        "width": "5%",
+                        mRender: function (data, type, full) {
+                            return `    `;
+                        }
 
-                },
-                {
-                    "data": "ID",
-                    mRender: function (data, type, full) {
-                        countData++;
-                        return `<a style="width:1%" onclick="GetReceiptById(${full.ID})"><center><i class="fas fa-edit"></i></center></a>    `;
+                    },
+                    {
+                        "data": "ID",
+                        mRender: function (data, type, full) {
+                            countData++;
+                            return `<a style="width:1%" onclick="GetReceiptById(${full.ID})"><center><i class="fas fa-edit"></i></center></a>
+                                <a style="width:1%" onclick="deleteReceipt(${full.ID})"><center><i class="fas fa-trash-alt"></i></center></a>`;
+                        }
+                    },
+                    //{
+                    //    "data": "Action",
+                    //    "name": "Action",
+                    //    mRender: function (data, type, full) {
+                    //        return `<button>Edit</button>`;
+                    //    }
+                    //}
+                ],
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="far fa-file-excel"></i> Excel',
+                        /* title : ,*/
+                        exportOptions: {
+                            columns: 'th:not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="far fa-file-pdf"></i> Pdf',
+                        exportOptions: {
+                            columns: 'th:not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="fas fa-print"></i> Print',
+                        exportOptions: {
+                            columns: 'th:not(:last-child)'
+                        }
                     }
-                },
-                //{
-                //    "data": "Action",
-                //    "name": "Action",
-                //    mRender: function (data, type, full) {
-                //        return `<button>Edit</button>`;
-                //    }
-                //}
-            ],
-            "dom": 'Bfrtip',
-            "buttons": [
-                {
-                    extend: 'excel',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="far fa-file-excel"></i> Excel',
-                    /* title : ,*/
-                    exportOptions: {
-                        columns: 'th:not(:last-child)'
-                    }
-                },
-                {
-                    extend: 'pdf',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="far fa-file-pdf"></i> Pdf',
-                    exportOptions: {
-                        columns: 'th:not(:last-child)'
-                    }
-                },
-                {
-                    extend: 'print',
-                    className: 'btn btn-dark rounded-0',
-                    text: '<i class="fas fa-print"></i> Print',
-                    exportOptions: {
-                        columns: 'th:not(:last-child)'
-                    }
+                ],
+                "initComplete": function (settings, json) {
+
+                    GetTotal(TotalPaidFess);
                 }
-            ],
-            "initComplete": function (settings, json) {
-                debugger
-                GetTotal(TotalPaidFess);
             }
-        }
-    );
+        );
+    }
+    else {
+        Table = $("#example1").DataTable(
+            {
+                deferRender: true,
+                "searching": true,
+                "responsive": true, "lengthChange": true, "autoWidth": false,
+                /*       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],*/
+                "ajax": {
+                    "url": "/Home/GetAllReceiptForFE?minDate=" + StartDate + "&maxDate=" + EndDate,
+                    "type": "GET",
+                    "datatype": "json"
+                },
+
+                "columns": [
+                    { "data": "Receipt_No", "width": "5%" },
+                    {
+                        "data": "Date", "width": "10%",
+                        mRender: function (data, type, full) {
+                            var split = data.split('-');
+                            var Date = [split[2], split[1], split[0]].join('/');
+                            return Date;
+                        }
+                    },
+                    { "data": "STD_ID" },
+                    { "data": "Student_name", "width": "25%" },
+                    { "data": "Cource" },
+                    {
+                        "data": "PaidFess",
+                        mRender: function (data, type, full) {
+                            if (countData == 0) {
+                                TotalPaidFess += full.PaidFess;
+                            }
+                            return full.PaidFess;
+                        }
+                    },
+                    { "data": "Payment_type" },
+                    {
+                        "data": "Payment_type",
+                        "width": "5%",
+                        mRender: function (data, type, full) {
+                            return `    `;
+                        }
+
+                    },                    
+                    //{
+                    //    "data": "Action",
+                    //    "name": "Action",
+                    //    mRender: function (data, type, full) {
+                    //        return `<button>Edit</button>`;
+                    //    }
+                    //}
+                ],
+                "dom": 'Bfrtip',
+                "buttons": [
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="far fa-file-excel"></i> Excel',
+                        /* title : ,*/
+                        exportOptions: {
+                            columns: 'th:not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="far fa-file-pdf"></i> Pdf',
+                        exportOptions: {
+                            columns: 'th:not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-dark rounded-0',
+                        text: '<i class="fas fa-print"></i> Print',
+                        exportOptions: {
+                            columns: 'th:not(:last-child)'
+                        }
+                    }
+                ],
+                "initComplete": function (settings, json) {
+
+                    GetTotal(TotalPaidFess);
+                }
+            }
+        );
+    }
+   
 
 
 }
@@ -265,3 +356,33 @@ $(document).on('change', '#DateRange', function () {
     }
 
 })
+
+function deleteReceipt(id) {
+    swal({
+        title: "Are you sure?",
+        text: "You Want To DELETE This Student",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "/Home/RemoveReceipt?id=" + id,
+                    type: "POST",
+                    dataType: "json",
+                    success: function () {
+                        swal("Receipt DELETED", {
+                            icon: "success",
+                        });
+                        Table.destroy();
+                        GetStudentList();
+                    }
+                });
+
+            } else {
+                swal("Receipt Is Not Deleted");
+            }
+        });
+
+}

@@ -29,6 +29,7 @@ namespace GMCE.Models
     
         public virtual DbSet<Student_Matser> Student_Matser { get; set; }
         public virtual DbSet<Receipt_Master> Receipt_Master { get; set; }
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
     
         public virtual ObjectResult<GetAllReceipt_Result> GetAllReceipt()
         {

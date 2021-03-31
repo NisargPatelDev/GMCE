@@ -23,18 +23,35 @@
             </div>
 
         </div>
-        <table id="example1" class="table table-bordered table-striped" >
+        <table id="example1" class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Receipt No</th>
-                    <th>Date</th>
-                    <th>STD ID</th>
-                    <th>Student Name</th>
-                    <th>Course</th>
-                    <th>Paid-Fees</th>                   
-                    <th>Payment-Type</th>
-                    <th>Remark</th>
-                    <th>EDIT</th>
+                    @{ if (Session["UserName"].ToString() == "admin")
+                        {
+                            <th>Receipt No</th>
+                            <th>Date</th>
+                            <th>STD ID</th>
+                            <th>Student Name</th>
+                            <th>Course</th>
+                            <th>Paid-Fees</th>
+                            <th>Payment-Type</th>
+                            <th>Remark</th>
+                            <th>EDIT</th>
+
+                        }
+                        else
+                        {
+                            <th>Receipt No</th>
+                            <th>Date</th>
+                            <th>STD ID</th>
+                            <th>Student Name</th>
+                            <th>Course</th>
+                            <th>Paid-Fees</th>
+                            <th>Payment-Type</th>
+                            <th>Remark</th>
+
+                        }
+                    }
                 </tr>
             </thead>
             <tbody id="ReceiptListBody">
@@ -159,6 +176,13 @@
 </div>
 
 @section scripts{
+    <script>
+        debugger
+        @{
+            var user = Session["UserName"].ToString();
 
+         }
+        var user = "@user.ToString()";
+    </script>
     <script src="~/Scripts/CollectionReport.js"></script>
 }
