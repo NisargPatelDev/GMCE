@@ -27,8 +27,8 @@ function GetAllReceipts() {
         var date = $('#DateRange').val().split("-");
         split = date[0].split('/');
         split2 = date[1].split('/');
-        StartDate = [split[1], split[0], split[2]].join('/');
-        EndDate = [split2[1], split2[0], split2[2]].join('/');
+        StartDate = [split[1], split[0], split[2]].join('/').trim();
+        EndDate = [split2[1], split2[0].trim(), split2[2]].join('/').trim();
     }
     if (user == "admin") {
         Table = $("#example1").DataTable(
@@ -95,27 +95,62 @@ function GetAllReceipts() {
                     {
                         extend: 'excel',
                         className: 'btn btn-dark rounded-0',
-                        text: '<i class="far fa-file-excel"></i> Excel',
-                        /* title : ,*/
+                        text: '<i class="far fa-file-excel"></i> Excel',                          
+                        title: "COLLECTION REPORT (" + StartDate + "-" + EndDate+")",
                         exportOptions: {
+                            title: 'GMP COLLECTION REPORT',
                             columns: 'th:not(:last-child)'
-                        }
+                        },
+                        messageTop: function () {
+                            if (StartDate != null) {
+                                return `(${StartDate} - ${EndDate})`;
+                            }
+                            else {
+                                return `(All})`;
+                            }
+
+                        },
+                        messageBottom: null
                     },
                     {
                         extend: 'pdf',
                         className: 'btn btn-dark rounded-0',
                         text: '<i class="far fa-file-pdf"></i> Pdf',
+                        title: "COLLECTION REPORT (" + StartDate + "-" + EndDate + ")",
                         exportOptions: {
+                            title: 'GMP COLLECTION REPORT',
                             columns: 'th:not(:last-child)'
-                        }
+                        },
+                        messageTop: function () {
+                            if (StartDate != null) {
+                                return `(${StartDate} - ${EndDate})`;
+                            }
+                            else {
+                                return `(All})`;
+                            }
+
+                        },
+                        messageBottom: null
                     },
                     {
                         extend: 'print',
                         className: 'btn btn-dark rounded-0',
                         text: '<i class="fas fa-print"></i> Print',
+                        title: "COLLECTION REPORT (" + StartDate + "-" + EndDate + ")",
                         exportOptions: {
+                            title: 'GMP COLLECTION REPORT',
                             columns: 'th:not(:last-child)'
-                        }
+                        },
+                        messageTop: function () {
+                            if (StartDate != null) {
+                                return `(${StartDate} - ${EndDate})`;
+                            }
+                            else {
+                                return `(All})`;
+                            }
+
+                        },
+                        messageBottom: null
                     }
                 ],
                 "initComplete": function (settings, json) {
@@ -182,27 +217,60 @@ function GetAllReceipts() {
                     {
                         extend: 'excel',
                         className: 'btn btn-dark rounded-0',
-                        text: '<i class="far fa-file-excel"></i> Excel',
-                        /* title : ,*/
+                        text: '<i class="far fa-file-excel"></i> Excel',                        
+                        messageBottom: null,
                         exportOptions: {
+                            title: 'GMP COLLECTION REPORT',
                             columns: 'th:not(:last-child)'
-                        }
+                        },
+                        messageTop: function () {
+                            if (StartDate != null) {
+                                return `(${StartDate} - ${EndDate})`;
+                            }
+                            else {
+                                return `(All})`;
+                            }
+                             
+                        },
+                        messageBottom: null
                     },
                     {
                         extend: 'pdf',
                         className: 'btn btn-dark rounded-0',
                         text: '<i class="far fa-file-pdf"></i> Pdf',
                         exportOptions: {
+                            title: 'GMP COLLECTION REPORT',
                             columns: 'th:not(:last-child)'
-                        }
+                        },
+                        messageTop: function () {
+                            if (StartDate != null) {
+                                return `(${StartDate} - ${EndDate})`;
+                            }
+                            else {
+                                return `(All})`;
+                            }
+
+                        },
+                        messageBottom: null
                     },
                     {
                         extend: 'print',
                         className: 'btn btn-dark rounded-0',
                         text: '<i class="fas fa-print"></i> Print',
                         exportOptions: {
+                            title: 'GMP COLLECTION REPORT',
                             columns: 'th:not(:last-child)'
-                        }
+                        },
+                        messageTop: function () {
+                            if (StartDate != null) {
+                                return `(${StartDate} - ${EndDate})`;
+                            }
+                            else {
+                                return `(All})`;
+                            }
+
+                        },
+                        messageBottom: null
                     }
                 ],
                 "initComplete": function (settings, json) {

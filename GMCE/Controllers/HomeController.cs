@@ -147,6 +147,15 @@ namespace GMCE.Controllers
                     var Due = Convert.ToInt32(isDataExsist.Total_fees) - GetDueFees(isDataExsist.STD_ID);
                     isDataExsist.Due_fees = Due.ToString();
                 }
+                else {
+                    if (std.Total_fees == "0")
+                    {
+                        isDataExsist.Due_fees = "0";
+                    }
+                    else {
+                        isDataExsist.Due_fees = std.Total_fees;
+                    }
+                }
                 _context.SaveChanges();
             }
             return Json(JsonRequestBehavior.AllowGet);
@@ -343,6 +352,12 @@ namespace GMCE.Controllers
         public JsonResult RemoveReceipt(int id)
         {
             var data = _context.Receipt_Master.FirstOrDefault(x => x.ID == id);
+            var studentdata = _context.Student_Matser.FirstOrDefault(x => x.STD_ID == data.STDID);
+            if (studentdata != null && data != null)
+            {
+                var duefee = Convert.ToInt32(studentdata.Due_fees) + Convert.ToInt32(data.PaidFess);
+                studentdata.Due_fees = duefee.ToString();
+            }
             _context.Receipt_Master.Remove(data);
             _context.SaveChanges();
             return Json(JsonRequestBehavior.AllowGet);
