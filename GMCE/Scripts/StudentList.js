@@ -11,10 +11,10 @@ function GetDatatable() {
 
 var count = 0;
 $(document).ready(function () {
-    
+
     $('#DateRange').daterangepicker();
     $('#DateRange').val("");
-    count++;   
+    count++;
     if (count != 0) {
         GetStudentList();
     }
@@ -28,7 +28,7 @@ $(document).ready(function () {
 var DataCount = 0;
 var Table = "";
 function GetStudentList() {
-   
+
     var StartDate = "";
     var EndDate = "";
     var isfiltered = 0;
@@ -37,8 +37,8 @@ function GetStudentList() {
         var date = $('#DateRange').val().split("-");
         split = date[0].split('/');
         split2 = date[1].split('/');
-        StartDate = [split[1], split[0], split[2]].join('/');
-        EndDate = [split2[1], split2[0], split2[2]].join('/');
+        StartDate = [split[0], split[1], split[2]].join('/').trim();
+        EndDate = [split2[0], split2[1].trim(), split2[2]].join('/').trim();
     }
     debugger
     if (user == "admin") {
@@ -208,7 +208,7 @@ function GetStudentList() {
                             var StartDate = [split[2], split[1], split[0]].join('/');
                             return StartDate;
                         }
-                    },                    
+                    },
                     //{
                     //    "data": "Action",
                     //    "name": "Action",
@@ -254,7 +254,7 @@ function GetStudentList() {
         );
 
     }
-    
+
     //$.get('/Home/GetStudentList?minDate=' + StartDate + "&maxDate=" + EndDate + "&stdType=" + $('#SelectStdType').val(), function (res) {
     //    debugger
     //    var data = res;
@@ -331,13 +331,16 @@ $(document).on('change', '#DateRange', function () {
 })
 
 function MoveStudent(id) {
-    var htmlString = ` <div class="col-4">
+    var htmlString = ` <div class="col-3">
                         <button type="button" id="Passout" onclick="Passout(${id})" class="btn btn-block btn-warning btn-lg">PASSOUT</button>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
                         <button type="button" id="Dropout" onclick="Dropout(${id})" class="btn btn-block btn-danger btn-lg">DROPOUT</button>
                     </div>
-                     <div class="col-4">
+                    <div class="col-3">
+                        <button type="button" id="Pending" onclick="Pending(${id})" class="btn btn-block btn-danger btn-lg">PENDING</button>
+                    </div>
+                     <div class="col-3">
                         <button type="button" id="Dropout" onclick="Running(${id})" class="btn btn-block btn-danger btn-lg">Running</button>
                     </div>`
     $('#MoveStd').html(htmlString);
@@ -408,6 +411,36 @@ function Dropout(id) {
         });
 }
 
+function Pending(id) {
+    $("#modal-default").modal('hide');
+    swal({
+        title: "Are you sure?",
+        text: "You Want To Move This Student To Pending",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "/Home/MoveStudent?id=" + id + "&moveTo=PENDING",
+                    type: "POST",
+                    dataType: "json",
+                    success: function () {
+                        swal("Student Moved To Pending", {
+                            icon: "success",
+                        });
+                        Table.destroy();
+                        GetStudentList();
+                    }
+                });
+
+            } else {
+                swal("Moving Process Canceld");
+            }
+        });
+}
+
 function Running(id) {
     $("#modal-default").modal('hide');
     swal({
@@ -440,7 +473,7 @@ function Running(id) {
 var STDID = "";
 function GetStudentById(id) {
     $.get('/Home/GetStudentById?id=' + id, function (res) {
-        
+
         var RegisterDate = new Date(parseInt(res.Registration_date.substr(6)));
         RegisterDate = RegisterDate.toLocaleDateString();
         split = RegisterDate.split('/');
@@ -448,20 +481,20 @@ function GetStudentById(id) {
             RegisterDate = [split[2], "0" + split[0], split[1]].join('-');
         }
         if (split[1].length == 1) {
-            RegisterDate = [split[2], split[0], "0" +split[1]].join('-');
+            RegisterDate = [split[2], split[0], "0" + split[1]].join('-');
         }
         if (split[0].length == 1 && split[1].length == 1) {
-            RegisterDate = [split[2], "0" +split[0], "0" + split[1]].join('-');
+            RegisterDate = [split[2], "0" + split[0], "0" + split[1]].join('-');
         }
-       
+
         $('#RegistrationDate').val(RegisterDate.toString());
         $('#StartDate').val(res.Start_date);
         $('#STDID').val(res.STD_ID);
-        $('#StudentName').val(res.Student_name);    
+        $('#StudentName').val(res.Student_name);
         $('#Cource').val(res.Cource);
         $('#StudentMO').val(res.Student_mobile);
         $('#ParentsMo').val(res.Parents_mobile);
-        $('#TotalFee').val(res.Total_fees);       
+        $('#TotalFee').val(res.Total_fees);
         $("input[name=FeesType][value=" + res.Fees_Payment + "]").attr('checked', 'checked');
         $("input[name=Gender][value=" + res.Gender + "]").attr('checked', 'checked');
         $('#DOB').val(res.DOB);
@@ -505,7 +538,7 @@ function ValidateRegistration() {
     }
     else if ($('#DOB').val() == "") {
         alert("PLease Enter D.O.B");
-    }   
+    }
     else if ($('#StudentMO').val() != "") {
         if ($('#StudentMO').val().length != 10) {
             alert("Please Enter 10 Digit Number in Student Mo")
@@ -537,8 +570,8 @@ function ValidateRegistration() {
         else {
             ResgisterStudent();
         }
-       
-       
+
+
     }
 }
 
@@ -566,11 +599,11 @@ function ResgisterStudent() {
         dataType: "json",
         success: function () {
             $('#EditModal').modal('hide');
-                alert("STD ID : " + $('#STDID').val() + " Name : " + $('#StudentName').val() + " is Edited");
+            alert("STD ID : " + $('#STDID').val() + " Name : " + $('#StudentName').val() + " is Edited");
             Table.destroy();
             GetStudentList();
         }
-       
+
     });
 }
 $(document).on('change', '#DOB', function () {
@@ -611,4 +644,10 @@ function deleteStudent(id) {
 
 }
 
+
+$(document).on('click', '#sms', function () {
+    $.get('/Home/SendSms', function (res) {
+        alert(res);
+    })
+})
 

@@ -21,14 +21,18 @@ function GetAllReceipts() {
     var countData = 0;
     var StartDate = "";
     var EndDate = "";
+    var tStartDate = "";
+    var tEndDate = "";
     var isfiltered = 0;
     if ($('#DateRange').val() != "") {
         isfiltered = 1;
         var date = $('#DateRange').val().split("-");
         split = date[0].split('/');
         split2 = date[1].split('/');
-        StartDate = [split[1], split[0], split[2]].join('/');
-        EndDate = [split2[1], split2[0], split2[2]].join('/');
+        StartDate = [split[0], split[1], split[2]].join('/').trim();
+        EndDate = [split2[0], split2[1].trim(), split2[2]].join('/').trim();
+        tStartDate = [split[1], split[0], split[2]].join('/').trim();
+        tEndDate = [split2[1], split2[0].trim(), split2[2]].join('/').trim();
     }
     Table = $("#example1").DataTable(
         {
@@ -39,8 +43,7 @@ function GetAllReceipts() {
                 "url": "/Home/GetOutStandingReport?minDate=" + StartDate + "&maxDate=" + EndDate,
                 "type": "GET",
                 "datatype": "json"
-            },
-            "order": [[4, "asc"]],
+            },           
             "columns": [
                 {
                     "data": "STD_ID",
@@ -103,20 +106,20 @@ function GetAllReceipts() {
                     extend: 'excel',
                     className: 'btn btn-dark rounded-0',
                     text: '<i class="far fa-file-excel"></i> Excel',
-                    /* title : ,*/
+                    title: "GMP OUTSTANDING REPORT (" + tStartDate + "-" + tEndDate + ")",
                     
                 },
                 {
                     extend: 'pdf',
                     className: 'btn btn-dark rounded-0',
                     text: '<i class="far fa-file-pdf"></i> Pdf',
-                  
+                    title: "GMP OUTSTANDING REPORT (" + tStartDate + "-" + tEndDate + ")",
                 },
                 {
                     extend: 'print',
                     className: 'btn btn-dark rounded-0',
                     text: '<i class="fas fa-print"></i> Print',
-                    
+                    title: "GMP OUTSTANDING REPORT (" + tStartDate + "-" + tEndDate + ")",
                 }
             ],
             "initComplete": function (settings, json) {
@@ -132,9 +135,8 @@ function GetAllReceipts() {
 function GetTotal(TotalDue) {
 
     Table.row.add({
-        "STD_ID": "",
-        "Student_name": "TOTAL DUE :",
-        "STD_ID": " ",
+        "STD_ID": "TOTAL DUE :",
+        "Student_name": "",        
         "Cource": " ",
         "Total_fees": "",
         "Due_fees": TotalDue,

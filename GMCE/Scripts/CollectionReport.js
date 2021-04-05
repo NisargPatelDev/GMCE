@@ -21,14 +21,18 @@ function GetAllReceipts() {
     var countData = 0;
     var StartDate = "";
     var EndDate = "";
+    var tStartDate = "";
+    var tEndDate = "";
     var isfiltered = 0;
     if ($('#DateRange').val() != "") {
         isfiltered = 1;
         var date = $('#DateRange').val().split("-");
         split = date[0].split('/');
         split2 = date[1].split('/');
-        StartDate = [split[1], split[0], split[2]].join('/').trim();
-        EndDate = [split2[1], split2[0].trim(), split2[2]].join('/').trim();
+        StartDate = [split[0], split[1], split[2]].join('/').trim();
+        EndDate = [split2[0], split2[1].trim(), split2[2]].join('/').trim();
+        tStartDate = [split[1], split[0], split[2]].join('/').trim();
+        tEndDate = [split2[1], split2[0].trim(), split2[2]].join('/').trim();
     }
     if (user == "admin") {
         Table = $("#example1").DataTable(
@@ -96,47 +100,28 @@ function GetAllReceipts() {
                         extend: 'excel',
                         className: 'btn btn-dark rounded-0',
                         text: '<i class="far fa-file-excel"></i> Excel',                          
-                        title: "COLLECTION REPORT (" + StartDate + "-" + EndDate+")",
+                        title: "GMP COLLECTION REPORT (" + tStartDate + "-" + tEndDate+")",
                         exportOptions: {
                             title: 'GMP COLLECTION REPORT',
                             columns: 'th:not(:last-child)'
-                        },
-                        messageTop: function () {
-                            if (StartDate != null) {
-                                return `(${StartDate} - ${EndDate})`;
-                            }
-                            else {
-                                return `(All})`;
-                            }
-
-                        },
-                        messageBottom: null
+                        },                        
                     },
                     {
                         extend: 'pdf',
                         className: 'btn btn-dark rounded-0',
                         text: '<i class="far fa-file-pdf"></i> Pdf',
-                        title: "COLLECTION REPORT (" + StartDate + "-" + EndDate + ")",
+                        title: "GMP COLLECTION REPORT (" + tStartDate + "-" + tEndDate + ")",
                         exportOptions: {
                             title: 'GMP COLLECTION REPORT',
                             columns: 'th:not(:last-child)'
                         },
-                        messageTop: function () {
-                            if (StartDate != null) {
-                                return `(${StartDate} - ${EndDate})`;
-                            }
-                            else {
-                                return `(All})`;
-                            }
-
-                        },
-                        messageBottom: null
+                      
                     },
                     {
                         extend: 'print',
                         className: 'btn btn-dark rounded-0',
                         text: '<i class="fas fa-print"></i> Print',
-                        title: "COLLECTION REPORT (" + StartDate + "-" + EndDate + ")",
+                        title: "GMP COLLECTION REPORT (" + tStartDate + "-" + tEndDate + ")",
                         exportOptions: {
                             title: 'GMP COLLECTION REPORT',
                             columns: 'th:not(:last-child)'
@@ -217,60 +202,32 @@ function GetAllReceipts() {
                     {
                         extend: 'excel',
                         className: 'btn btn-dark rounded-0',
-                        text: '<i class="far fa-file-excel"></i> Excel',                        
-                        messageBottom: null,
-                        exportOptions: {
-                            title: 'GMP COLLECTION REPORT',
+                        text: '<i class="far fa-file-excel"></i> Excel',  
+                        title: "GMP COLLECTION REPORT (" + tStartDate + "-" + tEndDate + ")",                      
+                        exportOptions: {                           
                             columns: 'th:not(:last-child)'
-                        },
-                        messageTop: function () {
-                            if (StartDate != null) {
-                                return `(${StartDate} - ${EndDate})`;
-                            }
-                            else {
-                                return `(All})`;
-                            }
-                             
-                        },
-                        messageBottom: null
+                        },                        
                     },
                     {
                         extend: 'pdf',
                         className: 'btn btn-dark rounded-0',
                         text: '<i class="far fa-file-pdf"></i> Pdf',
+                        title: "GMP COLLECTION REPORT (" + tStartDate + "-" + tEndDate + ")",
                         exportOptions: {
-                            title: 'GMP COLLECTION REPORT',
+                           
                             columns: 'th:not(:last-child)'
                         },
-                        messageTop: function () {
-                            if (StartDate != null) {
-                                return `(${StartDate} - ${EndDate})`;
-                            }
-                            else {
-                                return `(All})`;
-                            }
-
-                        },
-                        messageBottom: null
+                      
                     },
                     {
                         extend: 'print',
                         className: 'btn btn-dark rounded-0',
                         text: '<i class="fas fa-print"></i> Print',
+                        title: "GMP COLLECTION REPORT (" + tStartDate + "-" + tEndDate + ")",
                         exportOptions: {
-                            title: 'GMP COLLECTION REPORT',
+                         
                             columns: 'th:not(:last-child)'
-                        },
-                        messageTop: function () {
-                            if (StartDate != null) {
-                                return `(${StartDate} - ${EndDate})`;
-                            }
-                            else {
-                                return `(All})`;
-                            }
-
-                        },
-                        messageBottom: null
+                        },                      
                     }
                 ],
                 "initComplete": function (settings, json) {
@@ -319,7 +276,16 @@ function GetReceiptById(id) {
         $('#TotalFeeE').val(res.PaidFess);
         Dueefee = res.PaidFess;
         $('#FeesInWordsE').val(res.FessInWords);
-        $("input[name=FeesTypeE][value=" + res.Payment_type + "]").attr('checked', 'checked');
+        var feestype = res.Payment_type;
+        if (feestype != "CASH" && feestype != "CHEQUE" && feestype != "OTHER") {
+            $("input[name=FeesTypeE][value=OTHER]").attr('checked', 'checked');
+            $('#Feestype').html('<input type="text" id="OtherFeesType" class="form-control">');
+            $('#OtherFeesType').val(res.Payment_type);
+        }
+        else {
+            $('#Feestype').html('');
+            $("input[name=FeesTypeE][value=" + res.Payment_type + "]").attr('checked', 'checked');
+        }       
         $('#EditReceiptModal').modal('show');
         $('#HdnId').val(res.ID);
     })
@@ -349,6 +315,26 @@ function ValidateRegistration() {
     else if ($('#TotalFeeE').val() == "") {
         alert("PLease Enter Fees Paid");
     }
+    else if ($('input[name="FeesTypeE"]:checked').val() == "OTHER") {
+        if ($('#OtherFeesType').val() == "") {
+            alert("PLease Enter Other Fees Type");
+        }
+        else {
+            if (ReceiptNo != $('#ReceiptNoE').val()) {
+                $.get('/home/IsReceiptNoAlreadyExsist?no=' + $('#ReceiptNoE').val(), function (res) {
+                    if (res == 1) {
+                        ResgisterReceipt();
+                    }
+                    else {
+                        alert("Receipt No Alerday Exist!!");
+                    }
+                })
+            }
+            else {
+                ResgisterReceipt();
+            }
+        }
+    }
     else {
         if (ReceiptNo != $('#ReceiptNoE').val()) {
             $.get('/home/IsReceiptNoAlreadyExsist?no=' + $('#ReceiptNoE').val(), function (res) {
@@ -368,13 +354,20 @@ function ValidateRegistration() {
 }
 
 function ResgisterReceipt() {
+    var FeesType = "";
+    if ($('input[name="FeesTypeE"]:checked').val() == "OTHER") {
+        FeesType = $('#OtherFeesType').val().toUpperCase();
+    }
+    else {
+        FeesType = $('input[name="FeesTypeE"]:checked').val();
+    }
     var ReObj = {
         STDID: $('#STDIDE').val(),
         Date: $('#DateE').val(),
         Receipt_No: $('#ReceiptNoE').val(),
         PaidFess: $('#TotalFeeE').val(),
         FessInWords: $('#FeesInWordsE').val(),
-        Payment_type: $('input[name="FeesTypeE"]:checked').val()
+        Payment_type: FeesType
     };
     var Due = Dueefee - $('#TotalFeeE').val();
     $.ajax({
@@ -454,3 +447,13 @@ function deleteReceipt(id) {
         });
 
 }
+
+$(document).on('change', 'input:radio[name="FeesTypeE"]', function () {
+    if ($('input[name="FeesTypeE"]:checked').val() == "OTHER") {          
+        $('#Feestype').html('<input type="text" id="OtherFeesType" class="form-control">');
+    }
+    else {
+        $('#Feestype').html('');
+    }
+})
+

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using GMCE.Models;
+using System.Collections.Specialized;
+using System.Net;
+using RestSharp;
 
 namespace GMCE.Controllers
 {
@@ -171,8 +174,8 @@ namespace GMCE.Controllers
 
             if (minDate != "" && maxDate != "")
             {
-                var StartDate = Convert.ToDateTime(minDate);
-                var EndDate = Convert.ToDateTime(maxDate);
+                var StartDate = Convert.ToDateTime(DateTime.Parse(minDate).ToString("MM-dd-yyyy"));
+                var EndDate = Convert.ToDateTime(DateTime.Parse(maxDate).ToString("MM-dd-yyyy"));
                 var result = _context.Student_Matser.Where(x => x.Status == stdType).Where(entry => entry.Registration_date >= StartDate && entry.Registration_date <= EndDate).ToList();
                 return Json(new { data = result }, JsonRequestBehavior.AllowGet);
             }
@@ -256,10 +259,10 @@ namespace GMCE.Controllers
 
         public JsonResult GetAllReceiptForFE(string minDate, string maxDate)
         {
-            if (minDate != "" && maxDate != null)
+            if (minDate != "" && maxDate != "")
             {
-                var StartDate = Convert.ToDateTime(minDate);
-                var EndDate = Convert.ToDateTime(maxDate);
+                var StartDate = Convert.ToDateTime(DateTime.Parse(minDate).ToString("MM-dd-yyyy"));
+                var EndDate = Convert.ToDateTime(DateTime.Parse(maxDate).ToString("MM-dd-yyyy"));
                 var result = _context.GetAllReceipt().Where(entry => Convert.ToDateTime(entry.Date) >= StartDate && Convert.ToDateTime(entry.Date) <= EndDate).ToList();
                 return Json(new { data = result }, JsonRequestBehavior.AllowGet);
             }
@@ -327,8 +330,8 @@ namespace GMCE.Controllers
 
             if (minDate != "" && maxDate != "")
             {
-                var StartDate = Convert.ToDateTime(minDate);
-                var EndDate = Convert.ToDateTime(maxDate);
+                var StartDate = Convert.ToDateTime(DateTime.Parse(minDate).ToString("MM-dd-yyyy"));
+                var EndDate = Convert.ToDateTime(DateTime.Parse(maxDate).ToString("MM-dd-yyyy"));
                 var result = _context.Student_Matser.Where(x => x.Status == "RUNNING").Where(x => x.Due_fees != "0").Where(entry => entry.Registration_date >= StartDate && entry.Registration_date <= EndDate).ToList();
                 return Json(new { data = result }, JsonRequestBehavior.AllowGet);
             }
@@ -361,6 +364,34 @@ namespace GMCE.Controllers
             _context.Receipt_Master.Remove(data);
             _context.SaveChanges();
             return Json(JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult SendSms()
+        {
+            //String message = HttpUtility.UrlEncode("Hey Mr.Nisarg Patel Welcome to GM Computer your ID : GMP001");
+            //using (var wb = new WebClient())
+            //{
+            //    byte[] response = wb.UploadValues("https://api.textlocal.in/send/", new NameValueCollection()
+            //    {
+            //    {"apikey" , "MGViYWJjY2M4ZGIxN2E2NjhhNjdlZmU3ZDQ3ZDk2NzA="},
+            //    {"numbers" , "7043089014"},
+            //    {"message" , message},
+            //    {"sender" , "TXTLCL"}
+            //    });
+            //    string result = System.Text.Encoding.UTF8.GetString(response);
+            //    return Json(result, JsonRequestBehavior.AllowGet);
+            //}
+
+            var client = new RestClient("https://www.fast2sms.com/dev/bulkV2");
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("content-type", "application/x-www-form-urlencoded");
+            request.AddHeader("authorization", "71AUuwarg6WsESPtf0vy4Jle9IhibBZT8mYMRVDxdLcCQFj2Xo80n23j6EtmgBkhqGM4a1IJDbWrFQse");
+            request.AddParameter("sender_id", "TXTIND");
+            request.AddParameter("message", "HEY WELCOME TO GM COMPUTER");            
+            request.AddParameter("route", "dlt");
+            request.AddParameter("numbers", "7043089014,9892788011");
+            IRestResponse response = client.Execute(request);
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
     }
 }

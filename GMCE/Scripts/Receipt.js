@@ -71,13 +71,20 @@ $(document).on('keyup', '#TotalFee', function () {
 
 
 function CreateReceipt() {
+    var FeesType = "";
+    if ($('input[name="FeesType"]:checked').val() == "OTHER") {
+        FeesType = $('#OtherFeesType').val();
+    }
+    else {
+        FeesType = $('input[name="FeesType"]:checked').val();
+    }
     var ReObj = {
         STDID: $('#STDID').val().toUpperCase(),
         Date: $('#Date').val(),
         Receipt_No: $('#ReceiptNo').val(),
         PaidFess: $('#TotalFee').val(),
         FessInWords: $('#FeesInWords').val(),
-        Payment_type: $('input[name="FeesType"]:checked').val()
+        Payment_type: FeesType
     };
 
     $.ajax({
@@ -117,9 +124,16 @@ function ValidateReceipt() {
     else if ($('#StudentName').val() == "") {
         alert("PLease Enter Correct STD ID");
     }
-
     else if ($('#TotalFee').val() == "") {
         alert("PLease Enter Fees Paid");
+    }
+    else if ($('input[name="FeesType"]:checked').val() == "OTHER") {
+        if ($('#OtherFeesType').val() == "") {
+            alert("PLease Enter Other Fees Type");
+        }
+        else {
+            CreateReceipt();
+        }
     }
     else {
         CreateReceipt();
@@ -140,7 +154,18 @@ function ClearReceiptForm() {
     $('#Cource').val("");
     $('#TotalFee').val("");
     $('#FeesInWord').val("");
+    $('#Feestype').html('');
 }
 
 
+$(document).on('change', 'input:radio[name="FeesType"]', function () {
+    if ($('input[name="FeesType"]:checked').val() == "OTHER") {
+        var htmlString = ` 
+                                <input type="text" id="OtherFeesType" class="form-control">`
 
+        $('#Feestype').html(htmlString);
+    }
+    else {
+        $('#Feestype').html('');
+    }
+})
